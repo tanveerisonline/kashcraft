@@ -26,8 +26,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
     initialMax ?? maxPrice,
   ]);
 
-  const handleSliderChange = (newRange: number[]) => {
-    setRange([newRange[0], newRange[1]]);
+  const handleSliderChange = (newRange: number | number[]) => {
+    if (Array.isArray(newRange)) {
+      setRange([newRange[0], newRange[1]]);
+    } else {
+      // If it's a single number, we'll handle it as needed
+      // For a range slider, we expect an array, so this shouldn't happen
+      console.warn("Expected array for range slider, got number:", newRange);
+    }
   };
 
   const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

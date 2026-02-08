@@ -1,6 +1,17 @@
 import React from "react";
-import { ProductCardProps } from "../../product-display/product-card";
-import ProductCard from "../../product-display/product-card"; // Assuming ProductCard is in this path
+import { ProductCard } from "../../product-display/product-card";
+import { Button } from "@/components/ui/button";
+
+interface ProductCardProps {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  rating?: number;
+  reviewCount?: number;
+  stock?: number;
+  badge?: string;
+}
 
 interface WishlistGridProps {
   wishlistItems: ProductCardProps[];
@@ -22,13 +33,17 @@ const WishlistGrid: React.FC<WishlistGridProps> = ({
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {wishlistItems.map((item) => (
-            <ProductCard
-              key={item.id}
-              {...item}
-              // You might want to add specific actions for wishlist items here
-              // For example, an "Add to Cart" button or "Remove from Wishlist"
-              // For now, we'll just pass the existing ProductCard props
-            >
+            <div key={item.id} className="relative">
+              <ProductCard
+                product={{
+                  id: item.id,
+                  name: item.name,
+                  imageUrl: item.image,
+                  price: item.price,
+                  rating: item.rating,
+                  href: `/products/${item.id}`,
+                }}
+              />
               <div className="mt-4 flex items-center justify-between">
                 <Button variant="outline" size="sm" onClick={() => onRemoveFromWishlist(item.id)}>
                   Remove
@@ -37,7 +52,7 @@ const WishlistGrid: React.FC<WishlistGridProps> = ({
                   Add to Cart
                 </Button>
               </div>
-            </ProductCard>
+            </div>
           ))}
         </div>
       )}

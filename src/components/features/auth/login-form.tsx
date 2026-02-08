@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormField } from "../../ui/form-field";
+import { FormField } from "../../ui/form/form-field";
 import Link from "next/link";
 
 const loginSchema = z.object({
@@ -37,11 +37,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading, error }) => 
     <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md">
       <h2 className="mb-6 text-center text-2xl font-bold">Login to your account</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <FormField label="Email" error={errors.email?.message}>
-          <Input {...register("email")} type="email" placeholder="john.doe@example.com" />
+        <FormField name="email" label="Email">
+          <Input type="email" placeholder="john.doe@example.com" />
         </FormField>
-        <FormField label="Password" error={errors.password?.message}>
-          <Input {...register("password")} type="password" placeholder="********" />
+        <FormField name="password" label="Password">
+          <Input type="password" placeholder="********" />
         </FormField>
 
         {error && <p className="text-center text-sm text-red-500">{error}</p>}

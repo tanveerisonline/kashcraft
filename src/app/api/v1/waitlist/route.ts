@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth/auth";
 
 export async function POST(request: Request) {
   try {
-    const session = await getSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const session = await getSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });

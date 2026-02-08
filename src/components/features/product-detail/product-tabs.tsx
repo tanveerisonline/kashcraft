@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui/tabs"; // Assuming Tabs components exist
+import { Tabs, TabList, TabTrigger, TabContent } from "../../ui/tabs";
 
 interface ProductTabsProps {
   description: string;
@@ -17,20 +17,20 @@ const ProductTabs: React.FC<ProductTabsProps> = ({
   return (
     <div className={`mt-8 ${className}`}>
       <Tabs defaultValue="description">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="description">Description</TabsTrigger>
-          <TabsTrigger value="specifications">Specifications</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
-        </TabsList>
-        <TabsContent value="description" className="mt-4 text-gray-700">
+        <TabList className="grid w-full grid-cols-3">
+          <TabTrigger value="description">Description</TabTrigger>
+          <TabTrigger value="specifications">Specifications</TabTrigger>
+          <TabTrigger value="reviews">Reviews</TabTrigger>
+        </TabList>
+        <TabContent value="description" className="mt-4 text-gray-700">
           <p>{description}</p>
-        </TabsContent>
-        <TabsContent value="specifications" className="mt-4 text-gray-700">
+        </TabContent>
+        <TabContent value="specifications" className="mt-4 text-gray-700">
           {specifications}
-        </TabsContent>
-        <TabsContent value="reviews" className="mt-4 text-gray-700">
+        </TabContent>
+        <TabContent value="reviews" className="mt-4 text-gray-700">
           {reviews}
-        </TabsContent>
+        </TabContent>
       </Tabs>
     </div>
   );

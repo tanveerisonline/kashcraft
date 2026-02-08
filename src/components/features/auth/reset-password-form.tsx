@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormField } from "../../ui/form-field";
+import { FormField } from "../../ui/form/form-field";
 import Link from "next/link";
 
 const resetPasswordSchema = z
@@ -42,11 +42,11 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ onSubmit, isLoadi
     <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md">
       <h2 className="mb-6 text-center text-2xl font-bold">Reset Your Password</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <FormField label="New Password" error={errors.password?.message}>
-          <Input {...register("password")} type="password" placeholder="********" />
+        <FormField name="password" label="New Password">
+          <Input type="password" placeholder="********" />
         </FormField>
-        <FormField label="Confirm New Password" error={errors.confirmPassword?.message}>
-          <Input {...register("confirmPassword")} type="password" placeholder="********" />
+        <FormField name="confirmPassword" label="Confirm New Password">
+          <Input type="password" placeholder="********" />
         </FormField>
 
         {error && <p className="text-center text-sm text-red-500">{error}</p>}

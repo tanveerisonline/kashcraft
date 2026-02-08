@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
-import { FormField } from '../../ui/form-field';
+import { FormField } from '../../ui/form/form-field';
 import Link from 'next/link';
 
 const forgotPasswordSchema = z.object({
@@ -40,8 +40,8 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSubmit, isLoa
         Enter your email address below and we'll send you a link to reset your password.
       </p>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <FormField label="Email" error={errors.email?.message}>
-          <Input {...register('email')} type="email" placeholder="john.doe@example.com" />
+        <FormField name="email" label="Email">
+          <Input type="email" placeholder="john.doe@example.com" />
         </FormField>
 
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}

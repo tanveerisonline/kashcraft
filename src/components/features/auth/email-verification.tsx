@@ -1,5 +1,5 @@
 import React from "react";
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import { Mail } from "lucide-react";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
 }) => {
   return (
     <div className="mx-auto max-w-md rounded-lg bg-white p-6 text-center shadow-md">
-      <EnvelopeIcon className="mx-auto mb-6 h-24 w-24 text-blue-500" />
+      <Mail className="mx-auto mb-6 h-24 w-24 text-blue-500" />
       <h2 className="mb-3 text-2xl font-bold text-gray-800">Verify Your Email Address</h2>
       <p className="text-md mb-6 text-gray-600">
         A verification link has been sent to <span className="font-semibold">{email}</span>. Please

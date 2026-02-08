@@ -41,7 +41,7 @@ const MaterialFilter: React.FC<MaterialFilterProps> = ({
               <Checkbox
                 id={`material-${material}`}
                 checked={selectedMaterials.includes(material)}
-                onCheckedChange={(checked) => handleCheckboxChange(material, checked as boolean)}
+                onChange={(e) => handleCheckboxChange(material, e.target.checked)}
               />
               <Label htmlFor={`material-${material}`}>{material}</Label>
             </div>

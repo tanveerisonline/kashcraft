@@ -25,28 +25,28 @@ const AdminDashboard: React.FC = () => {
       id: "ORD001",
       customerName: "John Doe",
       totalAmount: 120.5,
-      status: "Delivered",
+      status: "Delivered" as const,
       orderDate: "2023-01-15",
     },
     {
       id: "ORD002",
       customerName: "Jane Smith",
       totalAmount: 250.0,
-      status: "Processing",
+      status: "Processing" as const,
       orderDate: "2023-01-16",
     },
     {
       id: "ORD003",
       customerName: "Peter Jones",
       totalAmount: 75.2,
-      status: "Pending",
+      status: "Pending" as const,
       orderDate: "2023-01-17",
     },
     {
       id: "ORD004",
       customerName: "Alice Brown",
       totalAmount: 300.0,
-      status: "Shipped",
+      status: "Shipped" as const,
       orderDate: "2023-01-18",
     },
   ];
@@ -59,7 +59,7 @@ const AdminDashboard: React.FC = () => {
       category: "Electronics",
       price: 25.99,
       stock: 150,
-      status: "In Stock",
+      status: "In Stock" as const,
     },
     {
       id: "PROD002",
@@ -67,7 +67,7 @@ const AdminDashboard: React.FC = () => {
       category: "Electronics",
       price: 79.99,
       stock: 0,
-      status: "Out of Stock",
+      status: "Out of Stock" as const,
     },
     {
       id: "PROD003",
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC = () => {
       category: "Accessories",
       price: 35.0,
       stock: 200,
-      status: "In Stock",
+      status: "In Stock" as const,
     },
     {
       id: "PROD004",
@@ -83,7 +83,7 @@ const AdminDashboard: React.FC = () => {
       category: "Electronics",
       price: 59.99,
       stock: 75,
-      status: "In Stock",
+      status: "In Stock" as const,
     },
   ];
 
@@ -118,7 +118,12 @@ const AdminDashboard: React.FC = () => {
       <div className="flex-1 p-6">
         <h1 className="mb-6 text-3xl font-bold">Admin Dashboard</h1>
         <div className="mb-6">
-          <DashboardCards />
+          <DashboardCards cards={[
+            { title: "Total Revenue", value: "$45,231.89", description: "+20.1% from last month" },
+            { title: "Subscriptions", value: "+2350", description: "+180.1% from last month" },
+            { title: "Sales", value: "+12,234", description: "+19% from last month" },
+            { title: "Active Now", value: "+573", description: "+201 since last hour" },
+          ]} />
         </div>
         <div className="mb-6">
           <SalesChart data={salesData} />

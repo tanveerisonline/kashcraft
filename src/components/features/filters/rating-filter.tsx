@@ -42,8 +42,8 @@ const RatingFilter: React.FC<RatingFilterProps> = ({
               <Checkbox
                 id={`rating-${rating}`}
                 checked={selectedRatings.includes(rating)}
-                onCheckedChange={(checked) =>
-                  handleCheckboxChange(rating, checked as boolean)
+                onChange={(e) =>
+                  handleCheckboxChange(rating, e.target.checked)
                 }
               />
               <Label htmlFor={`rating-${rating}`} className="flex items-center">

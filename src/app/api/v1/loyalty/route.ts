@@ -8,14 +8,19 @@ import { ApiResponseHandler } from "@/lib/api/response";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       throw new AppError(401, "Unauthorized", "UNAUTHORIZED", true);
     }
 
     const account = await loyaltyProgramService.getAccount(session.user.id);
-    const benefits = loyaltyProgramService.getTierBenefits(account.currentTier);
+
+    if (!account) {
+      throw new AppError(404, "Loyalty account not found", "ACCOUNT_NOT_FOUND", true);
+    }
+
+    const benefits = loyaltyProgramService.getTierBenefits(account.tier);
     const allTiers = loyaltyProgramService.getAllTiers();
 
     return NextResponse.json(
@@ -43,7 +48,7 @@ export const POST = validateBody<LoyaltyRedeemInput>(loyaltyRedeemSchema)(async 
   validated: LoyaltyRedeemInput
 ) => {
   try {
-    const session = await getSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       throw new AppError(401, "Unauthorized", "UNAUTHORIZED", true);

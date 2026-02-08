@@ -9,9 +9,9 @@ export async function POST(request: Request) {
       return Response.json({ error: "Valid email required" }, { status: 400 });
     }
 
-    const result = await emailMarketingService.addSubscriber(email, firstName, lastName);
+    const success = await emailMarketingService.addSubscriber(email, firstName, lastName);
 
-    return Response.json({ success: true, ...result });
+    return Response.json({ success });
   } catch (error) {
     console.error("Newsletter subscription error:", error);
     return Response.json({ error: "Subscription failed" }, { status: 400 });

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormField } from "../../ui/form-field";
+import { FormField } from "../../ui/form/form-field";
 import { Checkbox } from "../../ui/checkbox";
 
 const addressSchema = z.object({
@@ -15,7 +15,7 @@ const addressSchema = z.object({
   state: z.string().min(1, "State is required"),
   zipCode: z.string().min(1, "Zip Code is required"),
   country: z.string().min(1, "Country is required"),
-  isDefault: z.boolean().default(false),
+  isDefault: z.boolean(),
 });
 
 type AddressFormInputs = z.infer<typeof addressSchema>;
@@ -34,7 +34,17 @@ const AddressForm: React.FC<AddressFormProps> = ({ onSubmit, initialData, onCanc
     formState: { errors },
   } = useForm<AddressFormInputs>({
     resolver: zodResolver(addressSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      fullName: "",
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
+      isDefault: false,
+      ...initialData,
+    },
   });
 
   const handleFormSubmit: SubmitHandler<AddressFormInputs> = (data) => {
@@ -43,29 +53,29 @@ const AddressForm: React.FC<AddressFormProps> = ({ onSubmit, initialData, onCanc
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-      <FormField label="Full Name" error={errors.fullName?.message}>
-        <Input {...register("fullName")} placeholder="John Doe" />
+      <FormField name="fullName" label="Full Name">
+        <Input placeholder="John Doe" />
       </FormField>
-      <FormField label="Address Line 1" error={errors.addressLine1?.message}>
-        <Input {...register("addressLine1")} placeholder="123 Main St" />
+      <FormField name="addressLine1" label="Address Line 1">
+        <Input placeholder="123 Main St" />
       </FormField>
-      <FormField label="Address Line 2" error={errors.addressLine2?.message}>
-        <Input {...register("addressLine2")} placeholder="Apartment, suite, etc. (optional)" />
+      <FormField name="addressLine2" label="Address Line 2">
+        <Input placeholder="Apartment, suite, etc. (optional)" />
       </FormField>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormField label="City" error={errors.city?.message}>
-          <Input {...register("city")} placeholder="New York" />
+        <FormField name="city" label="City">
+          <Input placeholder="New York" />
         </FormField>
-        <FormField label="State" error={errors.state?.message}>
-          <Input {...register("state")} placeholder="NY" />
+        <FormField name="state" label="State">
+          <Input placeholder="NY" />
         </FormField>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormField label="Zip Code" error={errors.zipCode?.message}>
-          <Input {...register("zipCode")} placeholder="10001" />
+        <FormField name="zipCode" label="Zip Code">
+          <Input placeholder="10001" />
         </FormField>
-        <FormField label="Country" error={errors.country?.message}>
-          <Input {...register("country")} placeholder="USA" />
+        <FormField name="country" label="Country">
+          <Input placeholder="USA" />
         </FormField>
       </div>
       <div className="flex items-center space-x-2">

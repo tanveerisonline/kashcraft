@@ -13,9 +13,9 @@ export async function GET(request: Request, { params }: { params: { trackingNumb
       tracking: {
         trackingNumber: tracking.trackingNumber,
         carrier: tracking.carrier,
-        currentStatus: tracking.currentStatus,
+        currentStatus: tracking.status,
         estimatedDelivery: tracking.estimatedDelivery,
-        lastUpdated: tracking.lastUpdated,
+        lastUpdated: new Date(), // Using current date as placeholder since ShipmentInfo doesn't have lastUpdated
       },
     });
   } catch (error) {

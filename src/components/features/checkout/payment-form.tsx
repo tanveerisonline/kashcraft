@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormField } from "../../ui/form-field";
+import { FormField } from "../../ui/form/form-field";
 
 const paymentSchema = z.object({
   cardNumber: z
@@ -41,18 +41,18 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, initialData }) => {
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-      <FormField label="Card Number" error={errors.cardNumber?.message}>
-        <Input {...register("cardNumber")} placeholder="**** **** **** ****" />
+      <FormField name="cardNumber" label="Card Number">
+        <Input placeholder="**** **** **** ****" />
       </FormField>
-      <FormField label="Card Holder Name" error={errors.cardHolderName?.message}>
-        <Input {...register("cardHolderName")} placeholder="John Doe" />
+      <FormField name="cardHolderName" label="Card Holder Name">
+        <Input placeholder="John Doe" />
       </FormField>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormField label="Expiration Date (MM/YY)" error={errors.expirationDate?.message}>
-          <Input {...register("expirationDate")} placeholder="MM/YY" />
+        <FormField name="expirationDate" label="Expiration Date (MM/YY)">
+          <Input placeholder="MM/YY" />
         </FormField>
-        <FormField label="CVV" error={errors.cvv?.message}>
-          <Input {...register("cvv")} placeholder="***" />
+        <FormField name="cvv" label="CVV">
+          <Input placeholder="***" />
         </FormField>
       </div>
       <Button type="submit" className="w-full">

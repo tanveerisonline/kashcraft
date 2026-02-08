@@ -15,7 +15,8 @@ export const POST = validateBody<GiftCardValidateInput | GiftCardRedeemInput>(
   giftCardValidateSchema.or(giftCardRedeemSchema)
 )(async (req: NextRequest, validated: GiftCardValidateInput | GiftCardRedeemInput) => {
   try {
-    const { code, action } = validated as any;
+    const validatedAny = validated as any;
+    const { code, action } = validatedAny;
 
     if (action === "validate") {
       const giftCard = await giftCardVoucherService.getGiftCard(code);
@@ -24,14 +25,14 @@ export const POST = validateBody<GiftCardValidateInput | GiftCardRedeemInput>(
       return NextResponse.json(
         ApiResponseHandler.success({
           valid,
-          balance: giftCard?.currentBalance,
+          balance: giftCard?.balance,
           code: code.slice(-4),
         })
       );
     }
 
     if (action === "redeem") {
-      const session = await getSession();
+      const session = await auth();
 
       if (!session?.user?.id) {
         throw new AppError(401, "Unauthorized", "UNAUTHORIZED", true);

@@ -28,7 +28,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
   const getStatusVariant = (status: Product["status"]) => {
     switch (status) {
       case "In Stock":
-        return "success";
+        return "default";
       case "Out of Stock":
         return "destructive";
       case "Discontinued":

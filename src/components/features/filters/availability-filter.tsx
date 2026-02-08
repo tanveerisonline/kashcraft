@@ -41,7 +41,7 @@ const AvailabilityFilter: React.FC<AvailabilityFilterProps> = ({
               <Checkbox
                 id={`availability-${option}`}
                 checked={selectedOptions.includes(option)}
-                onCheckedChange={(checked) => handleCheckboxChange(option, checked as boolean)}
+                onChange={(e) => handleCheckboxChange(option, e.target.checked)}
               />
               <Label htmlFor={`availability-${option}`}>{option}</Label>
             </div>

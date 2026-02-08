@@ -29,11 +29,11 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
       case "Pending":
         return "secondary";
       case "Processing":
-        return "info";
+        return "default";
       case "Shipped":
-        return "warning";
+        return "default";
       case "Delivered":
-        return "success";
+        return "default";
       case "Cancelled":
         return "destructive";
       default:

@@ -170,7 +170,7 @@ const TestSearchPage: React.FC = () => {
               <Checkbox
                 id={category}
                 checked={selectedCategories.includes(category)}
-                onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
+                onChange={(e) => handleCategoryChange(category, e.target.checked)}
               />
               <Label htmlFor={category}>{category}</Label>
             </div>

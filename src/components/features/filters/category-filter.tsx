@@ -41,7 +41,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               <Checkbox
                 id={`category-${category}`}
                 checked={selectedCategories.includes(category)}
-                onCheckedChange={(checked) => handleCheckboxChange(category, checked as boolean)}
+                onChange={(e) => handleCheckboxChange(category, e.target.checked)}
               />
               <Label htmlFor={`category-${category}`}>{category}</Label>
             </div>

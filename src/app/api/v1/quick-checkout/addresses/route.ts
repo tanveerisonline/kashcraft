@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth/auth";
 
 export async function POST(request: Request) {
   try {
-    const session = await getSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -46,16 +46,21 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const session = await getSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get("type");
+    const typeParam = searchParams.get("type");
 
-    const addresses = await quickBuyService.getAddresses(session.user.id, type || undefined);
+    // Validate type parameter
+    const type = typeParam && (typeParam === "shipping" || typeParam === "billing")
+      ? typeParam
+      : undefined;
+
+    const addresses = await quickBuyService.getAddresses(session.user.id, type);
     return Response.json({ addresses });
   } catch (error) {
     console.error("Addresses error:", error);

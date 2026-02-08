@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown } from "lucide-react";
 
-interface ColumnDef<T> {
+export interface ColumnDef<T> {
   accessorKey: keyof T | string;
   header: string | React.ReactNode;
   cell?: (row: T) => React.ReactNode;

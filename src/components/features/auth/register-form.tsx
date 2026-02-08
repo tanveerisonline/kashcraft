@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormField } from "../../ui/form-field";
+import { FormField } from "../../ui/form/form-field";
 import Link from "next/link";
 
 const registerSchema = z
@@ -46,21 +46,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading, error 
       <h2 className="mb-6 text-center text-2xl font-bold">Create an account</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FormField label="First Name" error={errors.firstName?.message}>
-            <Input {...register("firstName")} placeholder="John" />
+          <FormField name="firstName" label="First Name">
+            <Input placeholder="John" />
           </FormField>
-          <FormField label="Last Name" error={errors.lastName?.message}>
-            <Input {...register("lastName")} placeholder="Doe" />
+          <FormField name="lastName" label="Last Name">
+            <Input placeholder="Doe" />
           </FormField>
         </div>
-        <FormField label="Email" error={errors.email?.message}>
-          <Input {...register("email")} type="email" placeholder="john.doe@example.com" />
+        <FormField name="email" label="Email">
+          <Input type="email" placeholder="john.doe@example.com" />
         </FormField>
-        <FormField label="Password" error={errors.password?.message}>
-          <Input {...register("password")} type="password" placeholder="********" />
+        <FormField name="password" label="Password">
+          <Input type="password" placeholder="********" />
         </FormField>
-        <FormField label="Confirm Password" error={errors.confirmPassword?.message}>
-          <Input {...register("confirmPassword")} type="password" placeholder="********" />
+        <FormField name="confirmPassword" label="Confirm Password">
+          <Input type="password" placeholder="********" />
         </FormField>
 
         {error && <p className="text-center text-sm text-red-500">{error}</p>}

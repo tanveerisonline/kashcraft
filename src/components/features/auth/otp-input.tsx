@@ -1,7 +1,7 @@
 import React, { useState, useRef, ChangeEvent, KeyboardEvent } from "react";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormField } from "../../ui/form-field";
+import { FormField } from "../../ui/form/form-field";
 
 interface OTPInputProps {
   length?: number;
@@ -59,7 +59,11 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete, isLoading, 
             onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target, index)}
             onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}
             onPaste={handlePaste}
-            ref={(el) => (inputRefs.current[index] = el)}
+            ref={(el) => {
+              if (el) {
+                inputRefs.current[index] = el;
+              }
+            }}
             className="h-12 w-12 text-center text-xl font-bold"
           />
         ))}

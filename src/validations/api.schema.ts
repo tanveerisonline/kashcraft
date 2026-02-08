@@ -1,9 +1,15 @@
 import { z } from "zod";
 
 // ============ SEARCH VALIDATION ============
+export const searchFilterSchema = z.object({
+  field: z.string(),
+  values: z.union([z.array(z.string()), z.object({ min: z.number().optional(), max: z.number().optional() })]),
+  operator: z.enum(["AND", "OR"]).optional(),
+});
+
 export const searchProductsSchema = z.object({
   query: z.string().min(1).max(200),
-  filters: z.record(z.any()).optional(),
+  filters: z.array(searchFilterSchema).optional(),
   sortBy: z
     .enum(["relevance", "price_asc", "price_desc", "newest", "rating", "popular"])
     .optional(),

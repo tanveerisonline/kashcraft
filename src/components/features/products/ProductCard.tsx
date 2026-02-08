@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { RatingDisplay } from "./reviews/RatingDisplay";
-import { WishlistButton } from "./products/WishlistButton";
+import { RatingDisplay } from "../reviews/RatingDisplay";
+import { WishlistButton } from "./WishlistButton";
 
 interface ProductCardProps {
   id: string;
