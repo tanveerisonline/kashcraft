@@ -2,22 +2,22 @@
 
 @theme {
   /* Colors */
-  --color-primary: #00664F; /* Kashmiri Green */
+  --color-primary: #00664f; /* Kashmiri Green */
   --color-primary-foreground: #ffffff;
-  
-  --color-secondary: #1C39BB; /* Persian Blue */
+
+  --color-secondary: #1c39bb; /* Persian Blue */
   --color-secondary-foreground: #ffffff;
-  
-  --color-accent: #D4AF37; /* Kashmiri Gold/Brass */
+
+  --color-accent: #d4af37; /* Kashmiri Gold/Brass */
   --color-accent-foreground: #000000;
-  
+
   --color-background: #ffffff;
   --color-foreground: #171717;
 
   /* Typography */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  
+
   /* Spacing Scale Extension */
   --spacing-18: 4.5rem;
   --spacing-112: 28rem;
@@ -34,18 +34,34 @@
   --animate-scale-in: scale-in 0.3s ease-out;
 
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
-  
+
   @keyframes slide-up {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
   @keyframes scale-in {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 }
 
@@ -64,36 +80,36 @@
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .container-custom {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
-  
+
   .heading-1 {
-    @apply font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl;
+    @apply text-foreground font-serif text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl;
   }
-  
+
   .heading-2 {
-    @apply font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl;
+    @apply text-foreground font-serif text-3xl font-bold tracking-tight sm:text-4xl;
   }
-  
+
   .heading-3 {
-    @apply font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl;
+    @apply text-foreground font-serif text-2xl font-bold tracking-tight sm:text-3xl;
   }
-  
+
   .body-text {
-    @apply font-sans text-base leading-relaxed text-foreground/80;
+    @apply text-foreground/80 font-sans text-base leading-relaxed;
   }
-  
+
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none;
   }
-  
+
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-md bg-secondary px-6 py-3 text-base font-medium text-secondary-foreground shadow-sm hover:bg-secondary/90 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-colors;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 focus:ring-secondary inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-medium shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none;
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
   }
 }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export function detectApiVersion(request: NextRequest) {
   const { pathname } = request.nextUrl;

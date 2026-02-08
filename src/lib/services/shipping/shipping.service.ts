@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface ShippingRate {
   id: string;
@@ -76,7 +76,7 @@ export class ShippingService {
     this.logger.info(`Fetching all shipping rates (isActive: ${isActive})`);
     const rates = await this.prisma.shippingRate.findMany({
       where: isActive !== undefined ? { isActive } : {},
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
     return rates.map(this.mapPrismaShippingRateToShippingRate);
   }

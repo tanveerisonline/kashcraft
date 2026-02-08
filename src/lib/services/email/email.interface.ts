@@ -28,7 +28,7 @@ export interface IEmailService {
 }
 
 export enum EmailProvider {
-  SENDGRID = 'sendgrid',
-  AWS_SES = 'aws_ses',
-  RESEND = 'resend',
+  SENDGRID = "sendgrid",
+  AWS_SES = "aws_ses",
+  RESEND = "resend",
 }

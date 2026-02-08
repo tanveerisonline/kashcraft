@@ -32,7 +32,7 @@ const ReviewSummary: React.FC<ReviewSummaryProps> = ({
         <CardTitle>Customer Reviews</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-5xl font-bold">{averageRating.toFixed(1)}</span>
             <div className="flex">
@@ -40,9 +40,7 @@ const ReviewSummary: React.FC<ReviewSummaryProps> = ({
                 <Star
                   key={i}
                   className={`h-6 w-6 ${
-                    i < Math.floor(averageRating)
-                      ? "text-yellow-500"
-                      : "text-gray-300"
+                    i < Math.floor(averageRating) ? "text-yellow-500" : "text-gray-300"
                   }`}
                   fill={i < Math.floor(averageRating) ? "currentColor" : "none"}
                 />
@@ -57,10 +55,12 @@ const ReviewSummary: React.FC<ReviewSummaryProps> = ({
             <div key={star} className="flex items-center gap-2">
               <span className="text-sm font-medium">{star} Star</span>
               <Progress
-                value={calculatePercentage(ratingDistribution[star as keyof typeof ratingDistribution])}
+                value={calculatePercentage(
+                  ratingDistribution[star as keyof typeof ratingDistribution]
+                )}
                 className="h-2 flex-1"
               />
-              <span className="text-sm text-gray-600 w-10 text-right">
+              <span className="w-10 text-right text-sm text-gray-600">
                 {ratingDistribution[star as keyof typeof ratingDistribution]}
               </span>
             </div>

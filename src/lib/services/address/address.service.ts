@@ -1,5 +1,5 @@
-import { PrismaClient, Address as PrismaAddress } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient, Address as PrismaAddress } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface Address {
   id: string;
@@ -51,7 +51,7 @@ export class AddressService {
     const newAddress = await this.prisma.address.create({
       data: {
         userId: input.userId,
-        type: input.type ?? 'shipping',
+        type: input.type ?? "shipping",
         street: input.street,
         city: input.city,
         state: input.state,
@@ -78,7 +78,7 @@ export class AddressService {
         userId,
         type: type || undefined,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
     return addresses.map(this.mapPrismaAddressToAddress);
   }
@@ -107,7 +107,11 @@ export class AddressService {
     });
   }
 
-  async setDefaultAddress(userId: string, addressId: string, type: string = 'shipping'): Promise<void> {
+  async setDefaultAddress(
+    userId: string,
+    addressId: string,
+    type: string = "shipping"
+  ): Promise<void> {
     this.logger.info(`Setting default address ${addressId} for user ${userId} (type: ${type})`);
     // First, unset current default for the given type
     await this.prisma.address.updateMany({

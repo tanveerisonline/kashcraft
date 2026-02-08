@@ -1,5 +1,5 @@
-import { PrismaClient, Category as PrismaCategory } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient, Category as PrismaCategory } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface Category {
   id: string;
@@ -71,7 +71,7 @@ export class CategoryService {
   async getAllCategories(): Promise<Category[]> {
     this.logger.info(`Fetching all categories`);
     const categories = await this.prisma.category.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
     return categories.map(this.mapPrismaCategoryToCategory);
   }
@@ -80,7 +80,7 @@ export class CategoryService {
     this.logger.info(`Fetching child categories for parent ID: ${parentId}`);
     const categories = await this.prisma.category.findMany({
       where: { parentId },
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
     return categories.map(this.mapPrismaCategoryToCategory);
   }

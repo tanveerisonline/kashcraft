@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Review {
   id: string;
@@ -15,7 +15,9 @@ interface ProductReviewsProps {
 
 const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews, className }) => {
   if (!reviews || reviews.length === 0) {
-    return <div className={`text-gray-600 ${className}`}>No reviews yet. Be the first to review!</div>;
+    return (
+      <div className={`text-gray-600 ${className}`}>No reviews yet. Be the first to review!</div>
+    );
   }
 
   return (
@@ -29,8 +31,10 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews, className }) =
           </div>
           <div className="mt-1 flex items-center">
             {/* Placeholder for star rating */}
-            <span className="text-yellow-500">{'★'.repeat(Math.round(review.rating))}</span>
-            <span className="ml-2 text-sm text-gray-600">{review.rating.toFixed(1)} out of 5 stars</span>
+            <span className="text-yellow-500">{"★".repeat(Math.round(review.rating))}</span>
+            <span className="ml-2 text-sm text-gray-600">
+              {review.rating.toFixed(1)} out of 5 stars
+            </span>
           </div>
           <p className="mt-2 text-gray-700">{review.comment}</p>
         </div>

@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  Settings,
-} from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings } from "lucide-react";
 
 interface AdminSidebarProps {
   // Add any props if needed
@@ -16,9 +10,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
     <div className="flex h-full flex-col overflow-y-auto border-r bg-white px-3 py-4 shadow-sm">
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Admin Dashboard
-          </h2>
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Admin Dashboard</h2>
           <div className="space-y-1">
             <Link
               href="/admin/dashboard"

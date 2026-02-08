@@ -64,9 +64,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
                 <TableCell>{order.customerName}</TableCell>
                 <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
                 <TableCell>
-                  <Badge variant={getStatusVariant(order.status)}>
-                    {order.status}
-                  </Badge>
+                  <Badge variant={getStatusVariant(order.status)}>{order.status}</Badge>
                 </TableCell>
                 <TableCell>{order.orderDate}</TableCell>
               </TableRow>

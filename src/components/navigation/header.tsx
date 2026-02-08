@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 interface HeaderProps {
   logo?: React.ReactNode;
@@ -21,9 +21,7 @@ const Header: React.FC<HeaderProps> = ({ logo, search, cart, userMenu }) => {
             </Link>
           )}
         </div>
-        <div className="flex flex-grow items-center justify-center px-4">
-          {search}
-        </div>
+        <div className="flex flex-grow items-center justify-center px-4">{search}</div>
         <div className="flex items-center space-x-4">
           {cart}
           {userMenu}

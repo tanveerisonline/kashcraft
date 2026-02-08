@@ -10,11 +10,11 @@ const TestToastSystemPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Toast System Test Page</h1>
+      <h1 className="mb-8 text-center text-3xl font-bold">Toast System Test Page</h1>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Basic Toasts</h2>
-        <Card className="p-6 flex flex-wrap gap-4 justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Basic Toasts</h2>
+        <Card className="flex flex-wrap justify-center gap-4 p-6">
           <Button
             onClick={() =>
               toast({
@@ -46,7 +46,7 @@ const TestToastSystemPage: React.FC = () => {
                 type: "warning",
               })
             }
-            className="bg-amber-500 hover:bg-amber-600 text-white"
+            className="bg-amber-500 text-white hover:bg-amber-600"
           >
             Show Warning Toast
           </Button>
@@ -58,7 +58,7 @@ const TestToastSystemPage: React.FC = () => {
                 type: "info",
               })
             }
-            className="bg-blue-500 hover:bg-blue-600 text-white"
+            className="bg-blue-500 text-white hover:bg-blue-600"
           >
             Show Info Toast
           </Button>
@@ -78,8 +78,8 @@ const TestToastSystemPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Toast with Action</h2>
-        <Card className="p-6 flex justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Toast with Action</h2>
+        <Card className="flex justify-center p-6">
           <Button
             onClick={() =>
               toast({
@@ -104,8 +104,8 @@ const TestToastSystemPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Longer Toast</h2>
-        <Card className="p-6 flex justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Longer Toast</h2>
+        <Card className="flex justify-center p-6">
           <Button
             onClick={() =>
               toast({

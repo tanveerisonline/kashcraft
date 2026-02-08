@@ -73,7 +73,7 @@ const AdminDashboard: React.FC = () => {
       id: "PROD003",
       name: "USB-C Hub",
       category: "Accessories",
-      price: 35.00,
+      price: 35.0,
       stock: 200,
       status: "In Stock",
     },
@@ -101,14 +101,14 @@ const AdminDashboard: React.FC = () => {
       name: "Jane Smith",
       email: "jane.smith@example.com",
       totalOrders: 3,
-      totalSpent: 320.00,
+      totalSpent: 320.0,
     },
     {
       id: "CUST003",
       name: "Peter Jones",
       email: "peter.jones@example.com",
       totalOrders: 8,
-      totalSpent: 980.50,
+      totalSpent: 980.5,
     },
   ];
 

@@ -16,9 +16,7 @@ const AvailabilityFilter: React.FC<AvailabilityFilterProps> = ({
   initialSelectedOptions = [],
   onApplyFilter,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(
-    initialSelectedOptions,
-  );
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(initialSelectedOptions);
 
   const handleCheckboxChange = (option: string, isChecked: boolean) => {
     let newSelectedOptions;
@@ -43,9 +41,7 @@ const AvailabilityFilter: React.FC<AvailabilityFilterProps> = ({
               <Checkbox
                 id={`availability-${option}`}
                 checked={selectedOptions.includes(option)}
-                onCheckedChange={(checked) =>
-                  handleCheckboxChange(option, checked as boolean)
-                }
+                onCheckedChange={(checked) => handleCheckboxChange(option, checked as boolean)}
               />
               <Label htmlFor={`availability-${option}`}>{option}</Label>
             </div>

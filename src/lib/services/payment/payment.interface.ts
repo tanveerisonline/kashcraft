@@ -37,8 +37,8 @@ export interface IPaymentGateway {
 }
 
 export enum PaymentProvider {
-  STRIPE = 'stripe',
-  PAYPAL = 'paypal',
-  RAZORPAY = 'razorpay',
+  STRIPE = "stripe",
+  PAYPAL = "paypal",
+  RAZORPAY = "razorpay",
   // Add other payment providers as needed
 }

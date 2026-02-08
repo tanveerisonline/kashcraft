@@ -9,13 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  ArrowUpDown,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown } from "lucide-react";
 
 interface ColumnDef<T> {
   accessorKey: keyof T | string;
@@ -58,7 +52,7 @@ const DataTable = <T extends Record<string, any>>({
       columns.some((column) => {
         const value = row[column.accessorKey as keyof T];
         return String(value).toLowerCase().includes(lowercasedFilter);
-      }),
+      })
     );
   }, [data, filtering, globalFilter, columns]);
 

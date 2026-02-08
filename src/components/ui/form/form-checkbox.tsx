@@ -1,8 +1,8 @@
-import React from 'react';
-import { useFormContext, FieldValues, FieldPath } from 'react-hook-form';
-import { Checkbox, CheckboxProps } from '../checkbox'; // Assuming Checkbox component exists in ui
-import { FormField } from './form-field';
-import { Label } from '../label';
+import React from "react";
+import { useFormContext, FieldValues, FieldPath } from "react-hook-form";
+import { Checkbox, CheckboxProps } from "../checkbox"; // Assuming Checkbox component exists in ui
+import { FormField } from "./form-field";
+import { Label } from "../label";
 
 interface FormCheckboxProps<TFieldValues extends FieldValues = FieldValues> extends CheckboxProps {
   name: FieldPath<TFieldValues>;
@@ -16,7 +16,10 @@ const FormCheckbox = <TFieldValues extends FieldValues = FieldValues>({
   description,
   ...props
 }: FormCheckboxProps<TFieldValues>) => {
-  const { control, formState: { errors } } = useFormContext<TFieldValues>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<TFieldValues>();
   const error = errors[name];
 
   return (

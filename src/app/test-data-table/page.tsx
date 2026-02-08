@@ -69,13 +69,8 @@ const TestDataTablePage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-6">Data Table Test Page</h1>
-      <DataTable
-        columns={columns}
-        data={dummyUsers}
-        onRowClick={handleRowClick}
-        pageSize={5}
-      />
+      <h1 className="mb-6 text-2xl font-bold">Data Table Test Page</h1>
+      <DataTable columns={columns} data={dummyUsers} onRowClick={handleRowClick} pageSize={5} />
     </div>
   );
 };

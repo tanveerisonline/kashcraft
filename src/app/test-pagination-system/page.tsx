@@ -14,20 +14,18 @@ const TestPaginationSystemPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Pagination System Test Page
-      </h1>
+      <h1 className="mb-8 text-center text-3xl font-bold">Pagination System Test Page</h1>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Basic Pagination</h2>
-        <Card className="p-6 flex justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Basic Pagination</h2>
+        <Card className="flex justify-center p-6">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
           />
         </Card>
-        <p className="text-center mt-4">Current Page: {currentPage}</p>
+        <p className="mt-4 text-center">Current Page: {currentPage}</p>
       </section>
     </div>
   );

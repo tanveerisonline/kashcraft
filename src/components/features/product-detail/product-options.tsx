@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Select } from '../../ui/select'; // Assuming Select component exists
-import { Input } from '../../ui/input'; // Assuming Input component exists
-import { Button } from '../../ui/button'; // Assuming Button component exists
+import React, { useState } from "react";
+import { Select } from "../../ui/select"; // Assuming Select component exists
+import { Input } from "../../ui/input"; // Assuming Input component exists
+import { Button } from "../../ui/button"; // Assuming Button component exists
 
 interface ProductOptionsProps {
   options: {

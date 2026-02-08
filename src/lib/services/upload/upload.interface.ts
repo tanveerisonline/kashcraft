@@ -20,7 +20,7 @@ export interface IUploadService {
 }
 
 export enum UploadProvider {
-  CLOUDINARY = 'cloudinary',
-  AWS_S3 = 'aws_s3',
-  AZURE_BLOB = 'azure_blob',
+  CLOUDINARY = "cloudinary",
+  AWS_S3 = "aws_s3",
+  AZURE_BLOB = "azure_blob",
 }

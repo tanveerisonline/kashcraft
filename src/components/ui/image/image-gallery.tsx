@@ -47,7 +47,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               "cursor-pointer rounded-md border-2 transition-all duration-200",
               mainImage.src === image.src
                 ? "border-primary"
-                : "border-transparent hover:border-gray-300",
+                : "border-transparent hover:border-gray-300"
             )}
             onClick={() => setMainImage(image)}
             style={{ minWidth: thumbnailSize, minHeight: thumbnailSize }}
@@ -57,7 +57,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               alt={image.alt}
               width={thumbnailSize}
               height={thumbnailSize}
-              className="object-cover rounded-md"
+              className="rounded-md object-cover"
             />
           </div>
         ))}

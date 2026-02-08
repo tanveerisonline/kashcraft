@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -16,7 +16,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       data: {}, // Replace with actual updated order data
     });
   } catch (error: any) {
-    console.error('Error updating order status:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("Error updating order status:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

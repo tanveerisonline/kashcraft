@@ -1,6 +1,12 @@
 // src/lib/services/payment/gateways/razorpay.gateway.ts
 
-import { IPaymentGateway, PaymentIntent, PaymentResult, RefundResult, PaymentStatus } from "../payment.interface";
+import {
+  IPaymentGateway,
+  PaymentIntent,
+  PaymentResult,
+  RefundResult,
+  PaymentStatus,
+} from "../payment.interface";
 
 export class RazorpayPaymentGateway implements IPaymentGateway {
   constructor() {
@@ -18,8 +24,15 @@ export class RazorpayPaymentGateway implements IPaymentGateway {
     };
   }
 
-  async createPaymentIntent(amount: number, currency: string, metadata: object): Promise<PaymentIntent> {
-    console.log(`Razorpay: Creating payment intent for ${amount} ${currency} with metadata:`, metadata);
+  async createPaymentIntent(
+    amount: number,
+    currency: string,
+    metadata: object
+  ): Promise<PaymentIntent> {
+    console.log(
+      `Razorpay: Creating payment intent for ${amount} ${currency} with metadata:`,
+      metadata
+    );
     // Simulate API call to Razorpay
     return {
       id: `rzp_pi_${Date.now()}`,

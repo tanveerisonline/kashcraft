@@ -1,6 +1,12 @@
 // src/lib/services/payment/gateways/stripe.gateway.ts
 
-import { IPaymentGateway, PaymentIntent, PaymentResult, RefundResult, PaymentStatus } from "../payment.interface";
+import {
+  IPaymentGateway,
+  PaymentIntent,
+  PaymentResult,
+  RefundResult,
+  PaymentStatus,
+} from "../payment.interface";
 
 export class StripePaymentGateway implements IPaymentGateway {
   constructor() {
@@ -18,8 +24,15 @@ export class StripePaymentGateway implements IPaymentGateway {
     };
   }
 
-  async createPaymentIntent(amount: number, currency: string, metadata: object): Promise<PaymentIntent> {
-    console.log(`Stripe: Creating payment intent for ${amount} ${currency} with metadata:`, metadata);
+  async createPaymentIntent(
+    amount: number,
+    currency: string,
+    metadata: object
+  ): Promise<PaymentIntent> {
+    console.log(
+      `Stripe: Creating payment intent for ${amount} ${currency} with metadata:`,
+      metadata
+    );
     // Simulate API call to Stripe
     return {
       id: `pi_stripe_${Date.now()}`,

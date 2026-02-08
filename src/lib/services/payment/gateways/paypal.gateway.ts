@@ -1,6 +1,12 @@
 // src/lib/services/payment/gateways/paypal.gateway.ts
 
-import { IPaymentGateway, PaymentIntent, PaymentResult, RefundResult, PaymentStatus } from "../payment.interface";
+import {
+  IPaymentGateway,
+  PaymentIntent,
+  PaymentResult,
+  RefundResult,
+  PaymentStatus,
+} from "../payment.interface";
 
 export class PayPalPaymentGateway implements IPaymentGateway {
   constructor() {
@@ -18,8 +24,15 @@ export class PayPalPaymentGateway implements IPaymentGateway {
     };
   }
 
-  async createPaymentIntent(amount: number, currency: string, metadata: object): Promise<PaymentIntent> {
-    console.log(`PayPal: Creating payment intent for ${amount} ${currency} with metadata:`, metadata);
+  async createPaymentIntent(
+    amount: number,
+    currency: string,
+    metadata: object
+  ): Promise<PaymentIntent> {
+    console.log(
+      `PayPal: Creating payment intent for ${amount} ${currency} with metadata:`,
+      metadata
+    );
     // Simulate API call to PayPal
     return {
       id: `pp_pi_${Date.now()}`,

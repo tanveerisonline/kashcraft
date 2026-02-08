@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Input } from '../../ui/input'; // Assuming Input component exists
-import { Button } from '../../ui/button'; // Assuming Button component exists
+import React, { useState } from "react";
+import { Input } from "../../ui/input"; // Assuming Input component exists
+import { Button } from "../../ui/button"; // Assuming Button component exists
 
 interface CartCouponProps {
   onApplyCoupon: (couponCode: string) => void;
@@ -8,13 +8,13 @@ interface CartCouponProps {
 }
 
 const CartCoupon: React.FC<CartCouponProps> = ({ onApplyCoupon, className }) => {
-  const [couponCode, setCouponCode] = useState('');
+  const [couponCode, setCouponCode] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (couponCode.trim()) {
       onApplyCoupon(couponCode.trim());
-      setCouponCode('');
+      setCouponCode("");
     }
   };
 

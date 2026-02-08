@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 interface FooterProps {
   className?: string;
@@ -7,14 +7,15 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ className }) => {
   return (
-    <footer className={`bg-gray-800 text-white py-8 ${className}`}>
+    <footer className={`bg-gray-800 py-8 text-white ${className}`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Section 1: About */}
           <div>
             <h3 className="mb-4 text-lg font-semibold">About Us</h3>
             <p className="text-sm text-gray-400">
-              Kashcraft is your one-stop shop for unique and handcrafted items. We believe in quality, creativity, and customer satisfaction.
+              Kashcraft is your one-stop shop for unique and handcrafted items. We believe in
+              quality, creativity, and customer satisfaction.
             </p>
           </div>
 
@@ -48,15 +49,9 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           {/* Section 3: Contact Info */}
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Info</h3>
-            <p className="text-sm text-gray-400">
-              123 Craft Lane, Artisan City, AC 12345
-            </p>
-            <p className="text-sm text-gray-400">
-              Email: info@kashcraft.com
-            </p>
-            <p className="text-sm text-gray-400">
-              Phone: (123) 456-7890
-            </p>
+            <p className="text-sm text-gray-400">123 Craft Lane, Artisan City, AC 12345</p>
+            <p className="text-sm text-gray-400">Email: info@kashcraft.com</p>
+            <p className="text-sm text-gray-400">Phone: (123) 456-7890</p>
           </div>
         </div>
 

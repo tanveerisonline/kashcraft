@@ -122,11 +122,7 @@ function Pagination({
   };
 
   return (
-    <nav
-      role="navigation"
-      aria-label="Pagination"
-      className="mx-auto flex w-full justify-center"
-    >
+    <nav role="navigation" aria-label="Pagination" className="mx-auto flex w-full justify-center">
       <ul className="flex flex-row items-center gap-1">
         <PaginationPrevious
           onClick={() => onPageChange(currentPage - 1)}
@@ -143,16 +139,8 @@ function Pagination({
 }
 Pagination.displayName = "Pagination";
 
-function PaginationContent({
-  className,
-  ...props
-}: React.ComponentProps<"ul">) {
-  return (
-    <ul
-      className={cn("flex flex-row items-center gap-1", className)}
-      {...props}
-    />
-  );
+function PaginationContent({ className, ...props }: React.ComponentProps<"ul">) {
+  return <ul className={cn("flex flex-row items-center gap-1", className)} {...props} />;
 }
 PaginationContent.displayName = "PaginationContent";
 
@@ -185,7 +173,7 @@ function PaginationLink({ className, ...props }: React.ComponentProps<"a">) {
           variant: "outline",
           size: "icon",
         }),
-        className,
+        className
       )}
       {...props}
     />
@@ -211,10 +199,7 @@ function PaginationPrevious({
 }
 PaginationPrevious.displayName = "PaginationPrevious";
 
-function PaginationNext({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationButton>) {
+function PaginationNext({ className, ...props }: React.ComponentProps<typeof PaginationButton>) {
   return (
     <PaginationButton
       aria-label="Go to next page"
@@ -229,10 +214,7 @@ function PaginationNext({
 }
 PaginationNext.displayName = "PaginationNext";
 
-function PaginationEllipsis({
-  className,
-  ...props
-}: React.ComponentProps<"span">) {
+function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       aria-hidden
@@ -261,7 +243,7 @@ function PaginationButton({
             variant,
             size,
           }),
-          className,
+          className
         )}
         {...props}
       />

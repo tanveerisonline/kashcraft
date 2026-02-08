@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
-import { Button } from '../../ui/button'; // Assuming Button component exists
+import React from "react";
+import Link from "next/link";
+import { Button } from "../../ui/button"; // Assuming Button component exists
 
 interface CartEmptyProps {
   className?: string;

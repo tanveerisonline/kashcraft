@@ -570,7 +570,7 @@ Before going live:
 - [ ] Incident response plan documented
 - [ ] Disaster recovery tested
 
-**Deployment approved by:** ********\_******** **Date:** **\_\_\_**
+**Deployment approved by:** **\*\*\*\***\_**\*\*\*\*** **Date:** **\_\_\_**
 
 ---
 

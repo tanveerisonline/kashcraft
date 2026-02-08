@@ -1,26 +1,26 @@
 // src/lib/services/cache/cache.service.ts
 
 export class CacheService {
-  private cache: Map<string, { value: any; expiry: number }> = new Map()
+  private cache: Map<string, { value: any; expiry: number }> = new Map();
 
   async get<T>(key: string): Promise<T | null> {
-    const item = this.cache.get(key)
+    const item = this.cache.get(key);
     if (!item) {
-      return null
+      return null;
     }
     if (Date.now() > item.expiry) {
-      this.cache.delete(key)
-      return null
+      this.cache.delete(key);
+      return null;
     }
-    return item.value as T
+    return item.value as T;
   }
 
   async set(key: string, value: any, ttlSeconds: number): Promise<void> {
-    const expiry = Date.now() + ttlSeconds * 1000
-    this.cache.set(key, { value, expiry })
+    const expiry = Date.now() + ttlSeconds * 1000;
+    this.cache.set(key, { value, expiry });
   }
 
   async del(key: string): Promise<void> {
-    this.cache.delete(key)
+    this.cache.delete(key);
   }
 }

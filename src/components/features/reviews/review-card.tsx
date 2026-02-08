@@ -34,9 +34,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`h-4 w-4 ${
-                  i < rating ? "text-yellow-500" : "text-gray-300"
-                }`}
+                className={`h-4 w-4 ${i < rating ? "text-yellow-500" : "text-gray-300"}`}
                 fill={i < rating ? "currentColor" : "none"}
               />
             ))}
@@ -45,7 +43,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         </div>
       </CardHeader>
       <CardContent>
-        <h3 className="mb-2 text-md font-semibold">{title}</h3>
+        <h3 className="text-md mb-2 font-semibold">{title}</h3>
         <p className="text-sm text-gray-700">{comment}</p>
       </CardContent>
     </Card>

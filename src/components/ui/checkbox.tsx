@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   // Additional props can be added here if needed
@@ -6,19 +6,11 @@ export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElemen
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, ...props }, ref) => {
-    const baseStyles =
-      'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500';
+    const baseStyles = "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500";
 
-    return (
-      <input
-        type="checkbox"
-        className={`${baseStyles} ${className}`}
-        ref={ref}
-        {...props}
-      />
-    );
+    return <input type="checkbox" className={`${baseStyles} ${className}`} ref={ref} {...props} />;
   }
 );
-Checkbox.displayName = 'Checkbox';
+Checkbox.displayName = "Checkbox";
 
 export { Checkbox };

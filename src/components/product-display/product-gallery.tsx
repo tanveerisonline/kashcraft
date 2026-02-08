@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from "react";
+import Image from "next/image";
 
 interface ProductGalleryProps {
   images: { src: string; alt: string }[];
@@ -29,16 +29,11 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, className }) =>
           <div
             key={index}
             className={`relative h-20 w-full cursor-pointer overflow-hidden rounded-lg border-2 ${
-              mainImage.src === image.src ? 'border-blue-500' : 'border-gray-200'
+              mainImage.src === image.src ? "border-blue-500" : "border-gray-200"
             }`}
             onClick={() => setMainImage(image)}
           >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              layout="fill"
-              objectFit="cover"
-            />
+            <Image src={image.src} alt={image.alt} layout="fill" objectFit="cover" />
           </div>
         ))}
       </div>

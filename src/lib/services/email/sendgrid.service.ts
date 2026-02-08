@@ -43,7 +43,9 @@ export class SendGridEmailService implements IEmailService {
   }
 
   async sendShippingNotification(to: string, order: Order, tracking: string): Promise<boolean> {
-    console.log(`SendGrid: Sending shipping notification to ${to} for order ID: ${order.id} with tracking: ${tracking}`);
+    console.log(
+      `SendGrid: Sending shipping notification to ${to} for order ID: ${order.id} with tracking: ${tracking}`
+    );
     // Simulate API call to SendGrid
     return true;
   }

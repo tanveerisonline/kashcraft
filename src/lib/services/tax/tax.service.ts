@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface TaxRate {
   id: string;
@@ -72,8 +72,15 @@ export class TaxService {
     return rate ? this.mapPrismaTaxRateToTaxRate(rate) : null;
   }
 
-  async findApplicableTaxRate(country: string, state?: string, city?: string, zipCode?: string): Promise<TaxRate | null> {
-    this.logger.info(`Finding applicable tax rate for country: ${country}, state: ${state}, city: ${city}, zipCode: ${zipCode}`);
+  async findApplicableTaxRate(
+    country: string,
+    state?: string,
+    city?: string,
+    zipCode?: string
+  ): Promise<TaxRate | null> {
+    this.logger.info(
+      `Finding applicable tax rate for country: ${country}, state: ${state}, city: ${city}, zipCode: ${zipCode}`
+    );
     // This logic can be complex depending on tax rules (e.g., most specific match wins)
     // For simplicity, we'll try to find an exact match or a default for the country.
     const rate = await this.prisma.taxRate.findFirst({
@@ -84,7 +91,7 @@ export class TaxService {
         zipCode: zipCode || null,
         isActive: true,
       },
-      orderBy: { isDefault: 'desc' }, // Prioritize default rates if no specific match
+      orderBy: { isDefault: "desc" }, // Prioritize default rates if no specific match
     });
     return rate ? this.mapPrismaTaxRateToTaxRate(rate) : null;
   }
@@ -93,7 +100,7 @@ export class TaxService {
     this.logger.info(`Fetching all tax rates (isActive: ${isActive})`);
     const rates = await this.prisma.taxRate.findMany({
       where: isActive !== undefined ? { isActive } : {},
-      orderBy: { country: 'asc' },
+      orderBy: { country: "asc" },
     });
     return rates.map(this.mapPrismaTaxRateToTaxRate);
   }

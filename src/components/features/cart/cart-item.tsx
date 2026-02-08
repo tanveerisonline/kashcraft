@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from 'next/image';
-import { Button } from '../../ui/button'; // Assuming Button component exists
+import React from "react";
+import Image from "next/image";
+import { Button } from "../../ui/button"; // Assuming Button component exists
 
 interface CartItemProps {
   item: {
@@ -18,12 +18,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onUpdateQuantity })
   return (
     <div className="flex items-center space-x-4 border-b border-gray-200 py-4 last:border-b-0">
       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md">
-        <Image
-          src={item.imageUrl}
-          alt={item.name}
-          layout="fill"
-          objectFit="cover"
-        />
+        <Image src={item.imageUrl} alt={item.name} layout="fill" objectFit="cover" />
       </div>
       <div className="flex-grow">
         <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>

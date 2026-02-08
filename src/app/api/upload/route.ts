@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 // Mock function to simulate file upload to cloud storage
 async function uploadFileToCloudStorage(file: File): Promise<string> {
   // In a real application, you would integrate with a cloud storage service like AWS S3, Google Cloud Storage, or Cloudinary.
   // This mock simply returns a placeholder URL.
-  console.log(`Simulating upload of file: ${file.name}, type: ${file.type}, size: ${file.size} bytes`);
+  console.log(
+    `Simulating upload of file: ${file.name}, type: ${file.type}, size: ${file.size} bytes`
+  );
   const mockFileUrl = `https://example.com/uploads/${Date.now()}-${file.name}`;
   return Promise.resolve(mockFileUrl);
 }
@@ -65,29 +67,37 @@ async function uploadFileToCloudStorage(file: File): Promise<string> {
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File | null;
+    const file = formData.get("file") as File | null;
 
     if (!file) {
-      return NextResponse.json({ message: 'No file uploaded' }, { status: 400 });
+      return NextResponse.json({ message: "No file uploaded" }, { status: 400 });
     }
 
     // Basic file validation
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+    const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "application/pdf"];
 
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ message: 'File size exceeds 5MB limit' }, { status: 400 });
+      return NextResponse.json({ message: "File size exceeds 5MB limit" }, { status: 400 });
     }
 
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      return NextResponse.json({ message: `File type ${file.type} not allowed. Allowed types: ${ALLOWED_FILE_TYPES.join(', ')}` }, { status: 400 });
+      return NextResponse.json(
+        {
+          message: `File type ${file.type} not allowed. Allowed types: ${ALLOWED_FILE_TYPES.join(", ")}`,
+        },
+        { status: 400 }
+      );
     }
 
     const fileUrl = await uploadFileToCloudStorage(file);
 
-    return NextResponse.json({ message: 'File uploaded successfully', url: fileUrl }, { status: 201 });
+    return NextResponse.json(
+      { message: "File uploaded successfully", url: fileUrl },
+      { status: 201 }
+    );
   } catch (error: any) {
-    console.error('Error uploading file:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("Error uploading file:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

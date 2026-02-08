@@ -31,11 +31,11 @@ const TestErrorStatesPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Error States Test Page</h1>
+      <h1 className="mb-8 text-center text-3xl font-bold">Error States Test Page</h1>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">ErrorBoundary</h2>
-        <Card className="p-6 flex justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">ErrorBoundary</h2>
+        <Card className="flex justify-center p-6">
           <ErrorBoundary
             fallback={
               <ErrorMessage
@@ -51,7 +51,7 @@ const TestErrorStatesPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">ErrorMessage</h2>
+        <h2 className="mb-4 text-2xl font-semibold">ErrorMessage</h2>
         <Card className="p-6">
           <ErrorMessage
             title="Data Fetch Error"
@@ -62,7 +62,7 @@ const TestErrorStatesPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">NotFound (404)</h2>
+        <h2 className="mb-4 text-2xl font-semibold">NotFound (404)</h2>
         <Card className="p-6">
           <NotFound
             message="The product you were looking for could not be found."
@@ -73,7 +73,7 @@ const TestErrorStatesPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">ServerError (500)</h2>
+        <h2 className="mb-4 text-2xl font-semibold">ServerError (500)</h2>
         <Card className="p-6">
           <ServerError
             message="Our servers are experiencing issues. We're working on it!"

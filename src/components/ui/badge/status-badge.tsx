@@ -2,7 +2,13 @@ import * as React from "react";
 import { Badge } from "./badge";
 import { cn } from "@/lib/utils";
 
-export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded";
+export type OrderStatus =
+  | "pending"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
 
 interface StatusBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   status: OrderStatus;

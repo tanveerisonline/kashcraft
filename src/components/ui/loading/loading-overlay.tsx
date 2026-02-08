@@ -22,8 +22,8 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
       {isLoading && (
         <div
           className={cn(
-            "absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70",
-            overlayClassName,
+            "bg-opacity-70 absolute inset-0 z-10 flex items-center justify-center bg-white",
+            overlayClassName
           )}
         >
           <Spinner size={spinnerSize} className={spinnerClassName} />

@@ -1,7 +1,7 @@
-import React from 'react';
-import { useFormContext, FieldValues, FieldPath } from 'react-hook-form';
-import { Input, InputProps } from '../input'; // Assuming Input component exists in ui
-import { FormField } from './form-field';
+import React from "react";
+import { useFormContext, FieldValues, FieldPath } from "react-hook-form";
+import { Input, InputProps } from "../input"; // Assuming Input component exists in ui
+import { FormField } from "./form-field";
 
 interface FormInputProps<TFieldValues extends FieldValues = FieldValues> extends InputProps {
   name: FieldPath<TFieldValues>;

@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 interface BreadcrumbItem {
   label: string;
@@ -34,7 +34,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className }) => {
             {index === items.length - 1 ? (
               <span className="text-sm font-medium text-gray-500">{item.label}</span>
             ) : (
-              <Link href={item.href} className="text-sm font-medium text-gray-700 hover:text-blue-600">
+              <Link
+                href={item.href}
+                className="text-sm font-medium text-gray-700 hover:text-blue-600"
+              >
                 {item.label}
               </Link>
             )}

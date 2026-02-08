@@ -16,9 +16,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   initialSelectedCategories = [],
   onApplyFilter,
 }) => {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    initialSelectedCategories,
-  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialSelectedCategories);
 
   const handleCheckboxChange = (category: string, isChecked: boolean) => {
     let newSelectedCategories;
@@ -43,9 +41,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               <Checkbox
                 id={`category-${category}`}
                 checked={selectedCategories.includes(category)}
-                onCheckedChange={(checked) =>
-                  handleCheckboxChange(category, checked as boolean)
-                }
+                onCheckedChange={(checked) => handleCheckboxChange(category, checked as boolean)}
               />
               <Label htmlFor={`category-${category}`}>{category}</Label>
             </div>

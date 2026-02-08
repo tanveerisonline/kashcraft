@@ -19,16 +19,76 @@ interface Product {
 }
 
 const dummyProducts: Product[] = [
-  { id: "1", name: "Laptop Pro", category: "Electronics", price: 1200, description: "Powerful laptop for professionals." },
-  { id: "2", name: "Mechanical Keyboard", category: "Accessories", price: 150, description: "Tactile and responsive typing experience." },
-  { id: "3", name: "Wireless Mouse", category: "Accessories", price: 50, description: "Ergonomic design for comfortable use." },
-  { id: "4", name: "4K Monitor", category: "Electronics", price: 400, description: "Stunning visuals for work and play." },
-  { id: "5", name: "USB-C Hub", category: "Accessories", price: 75, description: "Expand your connectivity options." },
-  { id: "6", name: "Gaming Headset", category: "Gaming", price: 100, description: "Immersive audio for competitive gaming." },
-  { id: "7", name: "External SSD 1TB", category: "Storage", price: 130, description: "Fast and portable storage solution." },
-  { id: "8", name: "Webcam HD", category: "Electronics", price: 60, description: "Clear video calls and streaming." },
-  { id: "9", name: "Desk Lamp with Wireless Charger", category: "Home Office", price: 80, description: "Modern lamp with convenient charging." },
-  { id: "10", name: "Ergonomic Chair", category: "Home Office", price: 300, description: "Supportive chair for long working hours." },
+  {
+    id: "1",
+    name: "Laptop Pro",
+    category: "Electronics",
+    price: 1200,
+    description: "Powerful laptop for professionals.",
+  },
+  {
+    id: "2",
+    name: "Mechanical Keyboard",
+    category: "Accessories",
+    price: 150,
+    description: "Tactile and responsive typing experience.",
+  },
+  {
+    id: "3",
+    name: "Wireless Mouse",
+    category: "Accessories",
+    price: 50,
+    description: "Ergonomic design for comfortable use.",
+  },
+  {
+    id: "4",
+    name: "4K Monitor",
+    category: "Electronics",
+    price: 400,
+    description: "Stunning visuals for work and play.",
+  },
+  {
+    id: "5",
+    name: "USB-C Hub",
+    category: "Accessories",
+    price: 75,
+    description: "Expand your connectivity options.",
+  },
+  {
+    id: "6",
+    name: "Gaming Headset",
+    category: "Gaming",
+    price: 100,
+    description: "Immersive audio for competitive gaming.",
+  },
+  {
+    id: "7",
+    name: "External SSD 1TB",
+    category: "Storage",
+    price: 130,
+    description: "Fast and portable storage solution.",
+  },
+  {
+    id: "8",
+    name: "Webcam HD",
+    category: "Electronics",
+    price: 60,
+    description: "Clear video calls and streaming.",
+  },
+  {
+    id: "9",
+    name: "Desk Lamp with Wireless Charger",
+    category: "Home Office",
+    price: 80,
+    description: "Modern lamp with convenient charging.",
+  },
+  {
+    id: "10",
+    name: "Ergonomic Chair",
+    category: "Home Office",
+    price: 300,
+    description: "Supportive chair for long working hours.",
+  },
 ];
 
 const categories = ["Electronics", "Accessories", "Gaming", "Storage", "Home Office"];
@@ -45,7 +105,7 @@ const TestSearchPage: React.FC = () => {
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     setSelectedCategories((prev) =>
-      checked ? [...prev, category] : prev.filter((c) => c !== category),
+      checked ? [...prev, category] : prev.filter((c) => c !== category)
     );
   };
 
@@ -70,16 +130,15 @@ const TestSearchPage: React.FC = () => {
     let filtered = dummyProducts;
 
     if (searchQuery) {
-      filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     if (selectedCategories.length > 0) {
-      filtered = filtered.filter((product) =>
-        selectedCategories.includes(product.category)
-      );
+      filtered = filtered.filter((product) => selectedCategories.includes(product.category));
     }
 
     return filtered;
@@ -87,7 +146,7 @@ const TestSearchPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Search Components Test Page</h1>
+      <h1 className="mb-8 text-center text-3xl font-bold">Search Components Test Page</h1>
 
       <div className="relative mb-8 flex justify-center">
         <SearchBar
@@ -104,16 +163,14 @@ const TestSearchPage: React.FC = () => {
         )}
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col gap-8 md:flex-row">
         <SearchFilters title="Product Categories">
           {categories.map((category) => (
             <div key={category} className="flex items-center space-x-2">
               <Checkbox
                 id={category}
                 checked={selectedCategories.includes(category)}
-                onCheckedChange={(checked) =>
-                  handleCategoryChange(category, checked as boolean)
-                }
+                onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
               />
               <Label htmlFor={category}>{category}</Label>
             </div>
@@ -129,7 +186,7 @@ const TestSearchPage: React.FC = () => {
                   <h3 className="text-xl font-semibold">{product.name}</h3>
                   <p className="text-gray-600">{product.category}</p>
                   <p className="text-lg font-bold">${product.price.toFixed(2)}</p>
-                  <p className="text-sm mt-2">{product.description}</p>
+                  <p className="mt-2 text-sm">{product.description}</p>
                 </Card>
               )}
             />

@@ -1,7 +1,7 @@
-import React from 'react';
-import { useFormContext, FieldValues, FieldPath } from 'react-hook-form';
-import { Textarea, TextareaProps } from '../textarea'; // Assuming Textarea component exists in ui
-import { FormField } from './form-field';
+import React from "react";
+import { useFormContext, FieldValues, FieldPath } from "react-hook-form";
+import { Textarea, TextareaProps } from "../textarea"; // Assuming Textarea component exists in ui
+import { FormField } from "./form-field";
 
 interface FormTextareaProps<TFieldValues extends FieldValues = FieldValues> extends TextareaProps {
   name: FieldPath<TFieldValues>;

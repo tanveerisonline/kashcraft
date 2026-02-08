@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal } from '../ui/modal'; // Assuming Modal component exists
+import React from "react";
+import { Modal } from "../ui/modal"; // Assuming Modal component exists
 
 interface ProductQuickViewProps {
   isOpen: boolean;

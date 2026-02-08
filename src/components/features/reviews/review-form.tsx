@@ -66,11 +66,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
                         <Star
                           key={i}
                           className={`h-6 w-6 cursor-pointer ${
-                            (i < (hoveredRating || field.value))
-                              ? "text-yellow-500"
-                              : "text-gray-300"
+                            i < (hoveredRating || field.value) ? "text-yellow-500" : "text-gray-300"
                           }`}
-                          fill={(i < (hoveredRating || field.value)) ? "currentColor" : "none"}
+                          fill={i < (hoveredRating || field.value) ? "currentColor" : "none"}
                           onClick={() => handleStarClick(i + 1)}
                           onMouseEnter={() => setHoveredRating(i + 1)}
                           onMouseLeave={() => setHoveredRating(0)}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export interface TabsProps {
   children: React.ReactNode;
@@ -41,27 +41,23 @@ const Tabs: React.FC<TabsProps> = ({ children, defaultValue, className }) => {
 };
 
 const TabList: React.FC<TabListProps> = ({ children, className }) => {
-  return (
-    <div className={`flex border-b border-gray-200 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`flex border-b border-gray-200 ${className}`}>{children}</div>;
 };
 
 const TabTrigger: React.FC<TabTriggerProps> = ({ value, children, className }) => {
   const context = React.useContext(TabsContext);
   if (!context) {
-    throw new Error('TabTrigger must be used within a Tabs component');
+    throw new Error("TabTrigger must be used within a Tabs component");
   }
   const { activeTab, setActiveTab } = context;
 
   const isActive = activeTab === value;
-  const activeStyles = 'border-b-2 border-blue-600 text-blue-600';
-  const inactiveStyles = 'text-gray-500 hover:text-gray-700';
+  const activeStyles = "border-b-2 border-blue-600 text-blue-600";
+  const inactiveStyles = "text-gray-500 hover:text-gray-700";
 
   return (
     <button
-      className={`px-4 py-2 -mb-px text-sm font-medium focus:outline-none ${
+      className={`-mb-px px-4 py-2 text-sm font-medium focus:outline-none ${
         isActive ? activeStyles : inactiveStyles
       } ${className}`}
       onClick={() => setActiveTab(value)}
@@ -74,7 +70,7 @@ const TabTrigger: React.FC<TabTriggerProps> = ({ value, children, className }) =
 const TabContent: React.FC<TabContentProps> = ({ value, children, className }) => {
   const context = React.useContext(TabsContext);
   if (!context) {
-    throw new Error('TabContent must be used within a Tabs component');
+    throw new Error("TabContent must be used within a Tabs component");
   }
   const { activeTab } = context;
 

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { RouteHandler } from './auth-middleware'; // Reusing RouteHandler type
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { RouteHandler } from "./auth-middleware"; // Reusing RouteHandler type
 
 // Placeholder for a custom API response handler.
 // In a real application, this would be a utility to standardize API error responses.
@@ -19,8 +19,8 @@ export function validateRequest<T>(schema: z.ZodSchema<T>) {
 
         if (!result.success) {
           return ApiResponseHandler.error(
-            'VALIDATION_ERROR',
-            'Invalid request data',
+            "VALIDATION_ERROR",
+            "Invalid request data",
             result.error.issues
           );
         }
@@ -30,8 +30,8 @@ export function validateRequest<T>(schema: z.ZodSchema<T>) {
 
         return handler(request, ...args);
       } catch (error) {
-        console.error('Error in validation middleware:', error);
-        return ApiResponseHandler.error('INTERNAL_SERVER_ERROR', 'Failed to process request body');
+        console.error("Error in validation middleware:", error);
+        return ApiResponseHandler.error("INTERNAL_SERVER_ERROR", "Failed to process request body");
       }
     };
   };

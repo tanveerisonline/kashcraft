@@ -64,7 +64,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
             className="w-full"
           />
         </div>
-        <div className="flex items-center justify-between gap-4 mb-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
           <div className="flex-1">
             <Label htmlFor="min-price">Min</Label>
             <Input

@@ -19,15 +19,19 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center p-8 text-center text-red-600 bg-red-50 rounded-lg border border-red-200",
-        className,
+        "flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 p-8 text-center text-red-600",
+        className
       )}
     >
-      <AlertCircle className="h-12 w-12 mb-4" />
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-sm mb-4">{message}</p>
+      <AlertCircle className="mb-4 h-12 w-12" />
+      <h3 className="mb-2 text-xl font-semibold">{title}</h3>
+      <p className="mb-4 text-sm">{message}</p>
       {onRetry && (
-        <Button onClick={onRetry} variant="outline" className="text-red-600 border-red-300 hover:bg-red-100">
+        <Button
+          onClick={onRetry}
+          variant="outline"
+          className="border-red-300 text-red-600 hover:bg-red-100"
+        >
           Retry
         </Button>
       )}

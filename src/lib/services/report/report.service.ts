@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface SalesReportInput {
   startDate: Date;
@@ -10,7 +10,12 @@ export interface SalesReport {
   totalRevenue: number;
   totalOrders: number;
   averageOrderValue: number;
-  topSellingProducts: { productId: string; productName: string; quantitySold: number; revenue: number }[];
+  topSellingProducts: {
+    productId: string;
+    productName: string;
+    quantitySold: number;
+    revenue: number;
+  }[];
 }
 
 export interface UserReportInput {
@@ -34,7 +39,9 @@ export class ReportService {
   }
 
   async generateSalesReport(input: SalesReportInput): Promise<SalesReport> {
-    this.logger.info(`Generating sales report from ${input.startDate.toISOString()} to ${input.endDate.toISOString()}`);
+    this.logger.info(
+      `Generating sales report from ${input.startDate.toISOString()} to ${input.endDate.toISOString()}`
+    );
 
     const orders = await this.prisma.order.findMany({
       where: {
@@ -43,7 +50,7 @@ export class ReportService {
           lte: input.endDate,
         },
         status: {
-          in: ['DELIVERED', 'CONFIRMED', 'SHIPPED'], // Consider these as completed sales
+          in: ["DELIVERED", "CONFIRMED", "SHIPPED"], // Consider these as completed sales
         },
       },
       include: {
@@ -59,9 +66,16 @@ export class ReportService {
     const totalOrders = orders.length;
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    const productSales: { [productId: string]: { productId: string; productName: string; quantitySold: number; revenue: number } } = {};
-    orders.forEach(order => {
-      order.items.forEach(item => {
+    const productSales: {
+      [productId: string]: {
+        productId: string;
+        productName: string;
+        quantitySold: number;
+        revenue: number;
+      };
+    } = {};
+    orders.forEach((order) => {
+      order.items.forEach((item) => {
         if (!productSales[item.productId]) {
           productSales[item.productId] = {
             productId: item.productId,
@@ -88,7 +102,9 @@ export class ReportService {
   }
 
   async generateUserReport(input: UserReportInput): Promise<UserReport> {
-    this.logger.info(`Generating user report from ${input.startDate.toISOString()} to ${input.endDate.toISOString()}`);
+    this.logger.info(
+      `Generating user report from ${input.startDate.toISOString()} to ${input.endDate.toISOString()}`
+    );
 
     const newUsers = await this.prisma.user.count({
       where: {
@@ -133,7 +149,7 @@ export class ReportService {
     });
 
     const topUsersByOrders = usersWithOrders
-      .map(user => {
+      .map((user) => {
         const orderCount = user.orders.length;
         const totalSpent = user.orders.reduce((sum, order) => sum + order.total.toNumber(), 0);
         return {

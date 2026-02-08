@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: {
@@ -34,7 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.rating && (
             <div className="mt-2 flex items-center">
               {/* Placeholder for star rating */}
-              <span className="text-yellow-500">{'★'.repeat(Math.round(product.rating))}</span>
+              <span className="text-yellow-500">{"★".repeat(Math.round(product.rating))}</span>
               <span className="ml-1 text-sm text-gray-500">({product.rating.toFixed(1)})</span>
             </div>
           )}

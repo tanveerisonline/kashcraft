@@ -40,10 +40,10 @@ const TestLoadingStatesPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Loading States Test Page</h1>
+      <h1 className="mb-8 text-center text-3xl font-bold">Loading States Test Page</h1>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Spinner</h2>
+        <h2 className="mb-4 text-2xl font-semibold">Spinner</h2>
         <div className="flex justify-center space-x-4">
           <Spinner size="small" />
           <Spinner size="medium" />
@@ -53,37 +53,37 @@ const TestLoadingStatesPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Skeleton</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h2 className="mb-4 text-2xl font-semibold">Skeleton</h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div>
-            <h3 className="text-xl font-medium mb-2">Card Skeleton</h3>
+            <h3 className="mb-2 text-xl font-medium">Card Skeleton</h3>
             <Skeleton type="card" className="h-48" />
           </div>
           <div>
-            <h3 className="text-xl font-medium mb-2">Image Skeleton</h3>
+            <h3 className="mb-2 text-xl font-medium">Image Skeleton</h3>
             <Skeleton type="image" className="h-40 w-full" />
           </div>
           <div>
-            <h3 className="text-xl font-medium mb-2">Text Skeleton</h3>
+            <h3 className="mb-2 text-xl font-medium">Text Skeleton</h3>
             <Skeleton type="text" count={5} className="w-full" />
           </div>
           <div>
-            <h3 className="text-xl font-medium mb-2">Custom Skeleton</h3>
+            <h3 className="mb-2 text-xl font-medium">Custom Skeleton</h3>
             <Skeleton type="custom" width="100%" height="80px" />
           </div>
         </div>
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">LoadingOverlay</h2>
-        <div className="relative h-64 w-full border rounded-md p-4">
+        <h2 className="mb-4 text-2xl font-semibold">LoadingOverlay</h2>
+        <div className="relative h-64 w-full rounded-md border p-4">
           <LoadingOverlay isLoading={overlayLoading}>
             <p className="text-center text-gray-600">
               Content that will be overlaid during loading.
             </p>
             <Button
               onClick={() => setOverlayLoading(true)}
-              className="mt-4 block mx-auto"
+              className="mx-auto mt-4 block"
               disabled={overlayLoading}
             >
               {overlayLoading ? "Loading..." : "Simulate Overlay Load"}
@@ -93,13 +93,13 @@ const TestLoadingStatesPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">ProgressBar</h2>
-        <div className="w-full max-w-md mx-auto">
+        <h2 className="mb-4 text-2xl font-semibold">ProgressBar</h2>
+        <div className="mx-auto w-full max-w-md">
           <ProgressBar value={progress} className="mb-2" />
           <p className="text-center text-sm text-gray-600">{progress}% Complete</p>
           <Button
             onClick={() => setOverlayLoading(true)}
-            className="mt-4 block mx-auto"
+            className="mx-auto mt-4 block"
             disabled={overlayLoading}
           >
             Start Progress
@@ -108,7 +108,7 @@ const TestLoadingStatesPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Combined Example</h2>
+        <h2 className="mb-4 text-2xl font-semibold">Combined Example</h2>
         <Card className="p-6">
           {isLoading ? (
             <div className="space-y-4">
@@ -118,10 +118,10 @@ const TestLoadingStatesPage: React.FC = () => {
             </div>
           ) : (
             <div>
-              <h3 className="text-xl font-semibold mb-2">Loaded Content</h3>
+              <h3 className="mb-2 text-xl font-semibold">Loaded Content</h3>
               <p>
-                This content appears after the initial loading state.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                This content appears after the initial loading state. Lorem ipsum dolor sit amet,
+                consectetur adipiscing elit.
               </p>
               <Button className="mt-4">Action Button</Button>
             </div>

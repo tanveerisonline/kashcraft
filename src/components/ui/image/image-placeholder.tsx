@@ -18,8 +18,8 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
   return (
     <div
       className={cn(
-        "flex items-center justify-center bg-gray-100 text-gray-400 rounded-md",
-        className,
+        "flex items-center justify-center rounded-md bg-gray-100 text-gray-400",
+        className
       )}
       style={{ width, height }}
     >

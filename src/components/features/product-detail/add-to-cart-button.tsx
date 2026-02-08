@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '../../ui/button'; // Assuming Button component exists
+import React from "react";
+import { Button } from "../../ui/button"; // Assuming Button component exists
 
 interface AddToCartButtonProps {
   productId: string;
@@ -8,7 +8,12 @@ interface AddToCartButtonProps {
   disabled?: boolean;
 }
 
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({ productId, onAddToCart, className, disabled }) => {
+const AddToCartButton: React.FC<AddToCartButtonProps> = ({
+  productId,
+  onAddToCart,
+  className,
+  disabled,
+}) => {
   const handleClick = () => {
     onAddToCart(productId);
   };

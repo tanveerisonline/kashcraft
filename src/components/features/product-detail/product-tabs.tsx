@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs'; // Assuming Tabs components exist
+import React from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui/tabs"; // Assuming Tabs components exist
 
 interface ProductTabsProps {
   description: string;
@@ -8,7 +8,12 @@ interface ProductTabsProps {
   className?: string;
 }
 
-const ProductTabs: React.FC<ProductTabsProps> = ({ description, specifications, reviews, className }) => {
+const ProductTabs: React.FC<ProductTabsProps> = ({
+  description,
+  specifications,
+  reviews,
+  className,
+}) => {
   return (
     <div className={`mt-8 ${className}`}>
       <Tabs defaultValue="description">

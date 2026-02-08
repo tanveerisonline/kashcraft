@@ -1,5 +1,5 @@
-import { PrismaClient, Review as PrismaReview } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient, Review as PrismaReview } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface CreateReviewInput {
   productId: string;
@@ -50,7 +50,7 @@ export class ReviewService {
     this.logger.info(`Fetching reviews for product ${productId}`);
     const prismaReviews = await this.prisma.review.findMany({
       where: { productId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
     return prismaReviews.map(this.mapPrismaReviewToReview);
   }

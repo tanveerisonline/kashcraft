@@ -14,9 +14,7 @@ const sizeClasses = {
 };
 
 const Spinner: React.FC<SpinnerProps> = ({ size = "medium", className }) => {
-  return (
-    <Loader2 className={cn("animate-spin text-primary", sizeClasses[size], className)} />
-  );
+  return <Loader2 className={cn("text-primary animate-spin", sizeClasses[size], className)} />;
 };
 
 export default Spinner;

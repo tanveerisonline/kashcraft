@@ -11,7 +11,7 @@ const NoResults: React.FC<NoResultsProps> = ({
     <div className="flex flex-col items-center justify-center py-10 text-gray-500">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-12 w-12 mb-4"
+        className="mb-4 h-12 w-12"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -24,7 +24,7 @@ const NoResults: React.FC<NoResultsProps> = ({
         />
       </svg>
       <p className="text-lg font-medium">{message}</p>
-      <p className="text-sm mt-2">Please try adjusting your search terms or filters.</p>
+      <p className="mt-2 text-sm">Please try adjusting your search terms or filters.</p>
     </div>
   );
 };

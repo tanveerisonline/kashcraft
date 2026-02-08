@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface MobileMenuProps {
   children: React.ReactNode;
@@ -33,7 +33,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ children }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-16 z-50 w-full bg-white shadow-lg">
+        <div className="absolute top-16 left-0 z-50 w-full bg-white shadow-lg">
           <nav className="flex flex-col p-4">{children}</nav>
         </div>
       )}

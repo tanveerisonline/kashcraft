@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ProductCarouselProps {
   children: React.ReactNode;
@@ -7,10 +7,8 @@ interface ProductCarouselProps {
 
 const ProductCarousel: React.FC<ProductCarouselProps> = ({ children, className }) => {
   return (
-    <div className={`overflow-x-auto whitespace-nowrap py-4 ${className}`}>
-      <div className="inline-flex space-x-4">
-        {children}
-      </div>
+    <div className={`overflow-x-auto py-4 whitespace-nowrap ${className}`}>
+      <div className="inline-flex space-x-4">{children}</div>
     </div>
   );
 };

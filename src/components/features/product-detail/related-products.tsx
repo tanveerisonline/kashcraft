@@ -1,5 +1,5 @@
-import React from 'react';
-import { ProductCard } from '../../product-display/product-card'; // Assuming ProductCard component exists
+import React from "react";
+import { ProductCard } from "../../product-display/product-card"; // Assuming ProductCard component exists
 
 interface Product {
   id: string;

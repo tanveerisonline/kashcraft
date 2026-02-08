@@ -9,11 +9,11 @@ import { Card } from "@/components/ui/card";
 const TestBadgeSystemPage: React.FC = () => {
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Badge System Test Page</h1>
+      <h1 className="mb-8 text-center text-3xl font-bold">Badge System Test Page</h1>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Base Badge Component</h2>
-        <Card className="p-6 flex flex-wrap gap-4 justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Base Badge Component</h2>
+        <Card className="flex flex-wrap justify-center gap-4 p-6">
           <Badge>Default</Badge>
           <Badge variant="secondary">Secondary</Badge>
           <Badge variant="destructive">Destructive</Badge>
@@ -22,8 +22,8 @@ const TestBadgeSystemPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Status Badge Component</h2>
-        <Card className="p-6 flex flex-wrap gap-4 justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Status Badge Component</h2>
+        <Card className="flex flex-wrap justify-center gap-4 p-6">
           <StatusBadge status="pending" />
           <StatusBadge status="processing" />
           <StatusBadge status="shipped" />
@@ -34,8 +34,8 @@ const TestBadgeSystemPage: React.FC = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Stock Badge Component</h2>
-        <Card className="p-6 flex flex-wrap gap-4 justify-center">
+        <h2 className="mb-4 text-2xl font-semibold">Stock Badge Component</h2>
+        <Card className="flex flex-wrap justify-center gap-4 p-6">
           <StockBadge stock={15} />
           <StockBadge stock={5} />
           <StockBadge stock={0} />

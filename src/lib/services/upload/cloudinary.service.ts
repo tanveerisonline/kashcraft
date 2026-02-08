@@ -1,7 +1,7 @@
 // src/lib/services/upload/cloudinary.service.ts
 
 import { IUploadService, UploadResult } from "./upload.interface";
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary } from "cloudinary";
 
 export class CloudinaryUploadService implements IUploadService {
   constructor() {
@@ -39,7 +39,7 @@ export class CloudinaryUploadService implements IUploadService {
 
   async uploadMultiple(files: any[], folder: string): Promise<UploadResult[]> {
     console.log(`Cloudinary: Uploading multiple files to folder: ${folder}`);
-    const uploadPromises = files.map(file => this.uploadSingle(file, folder));
+    const uploadPromises = files.map((file) => this.uploadSingle(file, folder));
     return Promise.all(uploadPromises);
   }
 
@@ -47,7 +47,7 @@ export class CloudinaryUploadService implements IUploadService {
     console.log(`Cloudinary: Deleting file with publicId: ${publicId}`);
     try {
       const result = await cloudinary.uploader.destroy(publicId);
-      return result.result === 'ok';
+      return result.result === "ok";
     } catch (error) {
       console.error("Cloudinary delete failed:", error);
       throw new Error("Failed to delete file from Cloudinary.");
@@ -55,7 +55,10 @@ export class CloudinaryUploadService implements IUploadService {
   }
 
   getOptimizedUrl(publicId: string, transformations: object): string {
-    console.log(`Cloudinary: Getting optimized URL for publicId: ${publicId} with transformations:`, transformations);
+    console.log(
+      `Cloudinary: Getting optimized URL for publicId: ${publicId} with transformations:`,
+      transformations
+    );
     // Example: { width: 100, height: 100, crop: "fill" }
     return cloudinary.url(publicId, transformations);
   }

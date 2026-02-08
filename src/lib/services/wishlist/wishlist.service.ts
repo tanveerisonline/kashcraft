@@ -1,5 +1,5 @@
-import { PrismaClient, Wishlist as PrismaWishlist } from '@prisma/client';
-import { LoggerService } from '../logger/logger.service';
+import { PrismaClient, Wishlist as PrismaWishlist } from "@prisma/client";
+import { LoggerService } from "../logger/logger.service";
 
 export interface WishlistItem {
   id: string;
@@ -43,7 +43,7 @@ export class WishlistService {
     this.logger.info(`Fetching wishlist for user ${userId}`);
     const prismaWishlistItems = await this.prisma.wishlist.findMany({
       where: { userId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
     return prismaWishlistItems.map(this.mapPrismaWishlistToWishlistItem);
   }

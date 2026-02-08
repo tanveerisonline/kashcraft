@@ -28,10 +28,7 @@ const ImageZoom: React.FC<ImageZoomProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative overflow-hidden cursor-zoom-in",
-        className,
-      )}
+      className={cn("relative cursor-zoom-in overflow-hidden", className)}
       style={{ width, height }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -43,7 +40,7 @@ const ImageZoom: React.FC<ImageZoomProps> = ({
         height={height}
         className={cn(
           "transition-transform duration-300 ease-in-out",
-          isZoomed ? `scale-[${zoomScale}]` : "scale-100",
+          isZoomed ? `scale-[${zoomScale}]` : "scale-100"
         )}
         style={{ transformOrigin: "center center" }}
       />

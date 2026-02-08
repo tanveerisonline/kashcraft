@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -15,8 +15,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
       data: {}, // Replace with actual order data
     });
   } catch (error: any) {
-    console.error('Error fetching order details:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("Error fetching order details:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
 

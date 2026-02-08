@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { ReportService } from '@/lib/services/report/report.service';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import { ReportService } from "@/lib/services/report/report.service";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const reportService = new ReportService(prisma);
@@ -10,7 +10,10 @@ export async function POST(request: Request) {
     const { startDate, endDate, format } = await request.json();
 
     if (!startDate || !endDate || !format) {
-      return NextResponse.json({ message: 'Missing startDate, endDate, or format' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing startDate, endDate, or format" },
+        { status: 400 }
+      );
     }
 
     const salesReport = await reportService.generateSalesReport({
@@ -23,7 +26,7 @@ export async function POST(request: Request) {
     let filename: string;
 
     switch (format) {
-      case 'csv':
+      case "csv":
         // Generate CSV content
         const csvRows = [
           "Metric,Value",
@@ -32,31 +35,36 @@ export async function POST(request: Request) {
           `Average Order Value,${salesReport.averageOrderValue}`,
           "\nTop Selling Products",
           "Product ID,Product Name,Quantity Sold,Revenue",
-          ...salesReport.topSellingProducts.map(p => `${p.productId},"${p.productName}",${p.quantitySold},${p.revenue}`)
+          ...salesReport.topSellingProducts.map(
+            (p) => `${p.productId},"${p.productName}",${p.quantitySold},${p.revenue}`
+          ),
         ];
-        content = csvRows.join('\n');
-        contentType = 'text/csv';
-        filename = 'sales_report.csv';
+        content = csvRows.join("\n");
+        contentType = "text/csv";
+        filename = "sales_report.csv";
         break;
-      case 'pdf':
+      case "pdf":
         // Placeholder for PDF generation
-        content = 'PDF generation not yet implemented.';
-        contentType = 'application/pdf';
-        filename = 'sales_report.pdf';
-        return NextResponse.json({ message: 'PDF export is not yet implemented.' }, { status: 501 });
+        content = "PDF generation not yet implemented.";
+        contentType = "application/pdf";
+        filename = "sales_report.pdf";
+        return NextResponse.json(
+          { message: "PDF export is not yet implemented." },
+          { status: 501 }
+        );
       default:
-        return NextResponse.json({ message: 'Unsupported format' }, { status: 400 });
+        return NextResponse.json({ message: "Unsupported format" }, { status: 400 });
     }
 
     return new NextResponse(content, {
       status: 200,
       headers: {
-        'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="${filename}"`,
+        "Content-Type": contentType,
+        "Content-Disposition": `attachment; filename="${filename}"`,
       },
     });
   } catch (error: any) {
-    console.error('Error generating sales report:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("Error generating sales report:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

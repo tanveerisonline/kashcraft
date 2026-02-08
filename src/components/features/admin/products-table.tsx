@@ -64,9 +64,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
                 <TableCell>${product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
-                  <Badge variant={getStatusVariant(product.status)}>
-                    {product.status}
-                  </Badge>
+                  <Badge variant={getStatusVariant(product.status)}>{product.status}</Badge>
                 </TableCell>
               </TableRow>
             ))}
