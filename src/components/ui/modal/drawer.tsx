@@ -15,6 +15,8 @@ Drawer.displayName = "Drawer";
 
 const DrawerTrigger = DrawerPrimitive.Trigger;
 
+const DrawerClose = DrawerPrimitive.Close;
+
 const DrawerPortal = DrawerPrimitive.Portal;
 
 const DrawerOverlay = React.forwardRef<

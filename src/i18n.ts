@@ -8,7 +8,10 @@ export type Locale = (typeof locales)[number];
 export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as Locale)) notFound();
 
+  const typedLocale = locale as Locale;
+
   return {
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    locale: typedLocale,
+    messages: (await import(`../messages/${typedLocale}.json`)).default,
   };
 });

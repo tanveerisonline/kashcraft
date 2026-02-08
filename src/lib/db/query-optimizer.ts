@@ -236,11 +236,11 @@ export const withQueryTimeout = async <T>(
 /**
  * Optimize findMany queries - select only needed fields
  */
-export const optimizedFindMany = async (prisma: PrismaClient, model: string, options: any = {}) => {
+export const optimizedFindMany = async (prisma: PrismaClient, model: keyof ReturnType<typeof QueryOptimizer.getOptimalSelects>, options: any = {}) => {
   const defaults = {
     take: 20,
     skip: 0,
-    select: QueryOptimizer.getOptimalSelects()[model as keyof typeof QueryOptimizer],
+    select: QueryOptimizer.getOptimalSelects()[model],
   };
 
   return prisma[model as keyof PrismaClient].findMany({

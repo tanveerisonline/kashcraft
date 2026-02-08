@@ -11,6 +11,8 @@ type ToasterToast = {
   description?: React.ReactNode;
   action?: React.ReactNode;
   duration?: number;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 } & (
   | {
       type: "success";

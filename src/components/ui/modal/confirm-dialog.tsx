@@ -20,7 +20,7 @@ interface ConfirmDialogProps {
   confirmText?: string;
   cancelText?: string;
   isConfirming?: boolean;
-  confirmVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  confirmVariant?: "primary" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -32,7 +32,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   confirmText = "Confirm",
   cancelText = "Cancel",
   isConfirming = false,
-  confirmVariant = "destructive",
+  confirmVariant = "primary",
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

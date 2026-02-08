@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
+import { VariantProps } from "class-variance-authority";
 
 export interface PaginationProps {
   currentPage: number;
@@ -144,17 +145,24 @@ function PaginationContent({ className, ...props }: React.ComponentProps<"ul">) 
 }
 PaginationContent.displayName = "PaginationContent";
 
+interface PaginationItemProps
+  extends React.ComponentProps<"a">,
+    VariantProps<typeof buttonVariants> {
+  isActive?: boolean;
+}
+
 function PaginationItem({
   className,
   isActive,
-  size = "icon",
+  variant,
+  size,
   ...props
-}: { isActive?: boolean } & React.ComponentProps<typeof PaginationLink>) {
+}: PaginationItemProps) {
   return (
     <li>
       <PaginationLink
         aria-current={isActive ? "page" : undefined}
-        variant={isActive ? "outline" : "ghost"}
+        variant={isActive ? "outline" : variant}
         size={size}
         className={cn(className)}
         {...props}
@@ -164,14 +172,18 @@ function PaginationItem({
 }
 PaginationItem.displayName = "PaginationItem";
 
-function PaginationLink({ className, ...props }: React.ComponentProps<"a">) {
+interface PaginationLinkProps
+  extends React.ComponentProps<"a">,
+    VariantProps<typeof buttonVariants> {}
+
+function PaginationLink({ className, variant, size, ...props }: PaginationLinkProps) {
   return (
     <a
       aria-current="page"
       className={cn(
         buttonVariants({
-          variant: "outline",
-          size: "icon",
+          variant,
+          size,
         }),
         className
       )}

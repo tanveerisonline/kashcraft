@@ -7,7 +7,6 @@ import {
   Toast,
   ToastClose,
   ToastDescription,
-  ToastProviderProps,
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast/toast";
@@ -18,9 +17,15 @@ export function Toaster() {
 
   return (
     <RadixToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({ id, title, description, action, type, ...props }) {
+        const variant =
+          type === "error"
+            ? "destructive"
+            : type === "info"
+              ? "default"
+              : type;
         return (
-          <Toast key={id} {...props}>
+          <Toast key={id} variant={variant} {...props}>
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && <ToastDescription>{description}</ToastDescription>}

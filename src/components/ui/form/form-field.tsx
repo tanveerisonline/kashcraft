@@ -1,12 +1,17 @@
 import React from "react";
-import { useFormContext, Controller, FieldValues, FieldPath } from "react-hook-form";
+import { useFormContext, Controller, FieldValues, FieldPath, ControllerRenderProps } from "react-hook-form";
 import { Label } from "../label";
+
+// Define the expected props for the child component
+type ChildProps<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>> =
+  ControllerRenderProps<TFieldValues, TName> & { id: string };
 
 interface FormFieldProps<TFieldValues extends FieldValues = FieldValues> {
   name: FieldPath<TFieldValues>;
   label?: string;
   description?: string;
-  children: React.ReactNode;
+  // Children must be a ReactElement that accepts the ChildProps
+  children: React.ReactElement<ChildProps<TFieldValues, FieldPath<TFieldValues>>>;
 }
 
 const FormField = <TFieldValues extends FieldValues = FieldValues>({
@@ -29,14 +34,9 @@ const FormField = <TFieldValues extends FieldValues = FieldValues>({
         control={control}
         render={({ field }) => {
           // Clone the child element and pass the field props
-          const child = React.isValidElement(children) ? children : null;
-          if (!child) {
-            return null;
-          }
-          return React.cloneElement(child, {
-            value: field.value,
-            onChange: field.onChange,
-            id: name,
+          return React.cloneElement(children, {
+            ...field, // Spread all field props
+            id: name, // Add id prop
           });
         }}
       />
