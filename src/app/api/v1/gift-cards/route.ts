@@ -25,7 +25,7 @@ export const POST = validateBody<GiftCardValidateInput | GiftCardRedeemInput>(
       return NextResponse.json(
         ApiResponseHandler.success({
           valid,
-          balance: giftCard?.balance,
+          currentBalance: giftCard?.currentBalance,
           code: code.slice(-4),
         })
       );

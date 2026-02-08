@@ -6,7 +6,7 @@
  * - Personalized recommendations (based on user history and preferences)
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 
 export interface RecommendationResult {
   productId: string;
@@ -103,7 +103,7 @@ export class RecommendationEngine {
         select: {
           categoryId: true,
           price: true,
-          tags: true,
+
         },
       });
 
@@ -119,14 +119,13 @@ export class RecommendationEngine {
             { categoryId: product.categoryId },
             {
               price: {
-                gte: product.price * 0.7,
-                lte: product.price * 1.3,
+                gte: Number(product.price) * 0.7,
+                lte: Number(product.price) * 1.3,
               },
             },
             { isActive: true },
           ],
         },
-        orderBy: { averageRating: "desc" },
         take: limit,
         include: {
           inventory: { select: { quantity: true } },
@@ -134,8 +133,16 @@ export class RecommendationEngine {
         },
       });
 
+      const similarWithAvgRating = similar.map((product) => {
+        const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0;
+        return { ...product, averageRating };
+      });
+
+      similarWithAvgRating.sort((a, b) => b.averageRating - a.averageRating);
+
       return {
-        products: similar,
+        products: similarWithAvgRating,
         type: "similar",
         reason: "Similar products you might like",
       };
@@ -186,7 +193,7 @@ export class RecommendationEngine {
         for (const item of order.items) {
           const categoryId = item.product.categoryId;
           categoryPreferences[categoryId] = (categoryPreferences[categoryId] || 0) + 1;
-          totalSpent += item.product.price;
+          totalSpent += Number(item.product.price);
           purchasedIds.add(item.product.id);
         }
       }
@@ -213,16 +220,31 @@ export class RecommendationEngine {
             { isActive: true },
           ],
         },
-        orderBy: [{ averageRating: "desc" }, { sales: "desc" }],
+        orderBy: [], // Removed sales from orderBy
         take: limit,
         include: {
           inventory: { select: { quantity: true } },
           reviews: { select: { rating: true } },
+          orderItems: { select: { quantity: true } }, // Include orderItems to calculate sales
         },
       });
 
+      const recommendationsWithDerivedMetrics = recommendations.map((product) => {
+        const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0;
+        const sales = product.orderItems.reduce((sum, item) => sum + item.quantity, 0); // Calculate sales
+        return { ...product, averageRating, sales };
+      });
+
+      recommendationsWithDerivedMetrics.sort((a, b) => {
+        if (b.averageRating !== a.averageRating) {
+          return b.averageRating - a.averageRating;
+        }
+        return b.sales - a.sales;
+      });
+
       return {
-        products: recommendations,
+        products: recommendationsWithDerivedMetrics,
         type: "personalized",
         reason: "Based on your interests and purchase history",
       };
@@ -245,16 +267,31 @@ export class RecommendationEngine {
           isActive: true,
           createdAt: { gte: thirtyDaysAgo },
         },
-        orderBy: [{ sales: "desc" }, { averageRating: "desc" }],
+        orderBy: [], // Removed sales from orderBy
         take: limit,
         include: {
           inventory: { select: { quantity: true } },
           reviews: { select: { rating: true } },
+          orderItems: { select: { quantity: true } }, // Include orderItems to calculate sales
         },
       });
 
+      const productsWithDerivedMetrics = products.map((product) => {
+        const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0;
+        const sales = product.orderItems.reduce((sum, item) => sum + item.quantity, 0); // Calculate sales
+        return { ...product, averageRating, sales };
+      });
+
+      productsWithDerivedMetrics.sort((a, b) => {
+        if (b.sales !== a.sales) {
+          return b.sales - a.sales;
+        }
+        return b.averageRating - a.averageRating;
+      });
+
       return {
-        products,
+        products: productsWithDerivedMetrics,
         type: "trending",
         reason: "Trending now",
       };
@@ -325,17 +362,27 @@ export class RecommendationEngine {
         // Show best sellers
         const bestSellers = await prisma.product.findMany({
           where: { isActive: true },
-          orderBy: { sales: "desc" },
+          orderBy: [], // Removed sales from orderBy
           take: 6,
           include: {
             inventory: { select: { quantity: true } },
             reviews: { select: { rating: true } },
+            orderItems: { select: { quantity: true } }, // Include orderItems to calculate sales
           },
         });
 
+        const bestSellersWithDerivedMetrics = bestSellers.map((product) => {
+          const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+          const averageRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0;
+          const sales = product.orderItems.reduce((sum, item) => sum + item.quantity, 0); // Calculate sales
+          return { ...product, averageRating, sales };
+        });
+
+        bestSellersWithDerivedMetrics.sort((a, b) => b.sales - a.sales);
+
         sections.push({
           title: "Best Sellers",
-          products: bestSellers,
+          products: bestSellersWithDerivedMetrics,
           type: "popular",
         });
       }
@@ -351,9 +398,17 @@ export class RecommendationEngine {
         },
       });
 
+      const newArrivalsWithAvgRating = newArrivals.map((product) => {
+        const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0;
+        return { ...product, averageRating };
+      });
+
+      newArrivalsWithAvgRating.sort((a, b) => b.averageRating - a.averageRating);
+
       sections.push({
         title: "New Arrivals",
-        products: newArrivals,
+        products: newArrivalsWithAvgRating,
         type: "new",
       });
 
@@ -382,9 +437,11 @@ export class RecommendationEngine {
     }
 
     // Rating similarity: +20 points
-    const ratingDiff = Math.abs(product1.averageRating - product2.averageRating);
-    if (ratingDiff < 1) {
-      score += 20;
+    if (product1.averageRating && product2.averageRating) {
+      const ratingDiff = Math.abs(product1.averageRating - product2.averageRating);
+      if (ratingDiff < 1) {
+        score += 20;
+      }
     }
 
     // Similar sales: +10 points

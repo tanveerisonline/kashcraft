@@ -1,5 +1,7 @@
-import { advancedSearchService } from "@/lib/services/search/advanced-search.service";
+import { AdvancedSearchService } from "@/lib/services/search/advanced-search.service";
 import { auth } from "@/lib/auth/auth";
+
+const advancedSearchService = AdvancedSearchService.getInstance();
 
 export async function GET() {
   try {

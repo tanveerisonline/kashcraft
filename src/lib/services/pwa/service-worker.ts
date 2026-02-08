@@ -87,6 +87,23 @@ const withPWA = require("next-pwa")({
 
 export default withPWA;
 
+declare global {
+  interface ServiceWorkerRegistration {
+    readonly sync: SyncManager;
+    readonly periodicSync: PeriodicSyncManager;
+  }
+
+  interface SyncManager {
+    register(tag: string): Promise<void>;
+    getTags(): Promise<string[]>;
+  }
+
+  interface PeriodicSyncManager {
+    register(tag: string, options?: { minInterval: number }): Promise<void>;
+    getTags(): Promise<string[]>;
+  }
+}
+
 /**
  * Client-side service worker utilities
  */

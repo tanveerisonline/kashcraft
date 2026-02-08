@@ -3,33 +3,37 @@
  * Handles gift card creation, redemption, and balance management
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 import crypto from "crypto";
+
+import { Prisma } from '@prisma/client';
 
 export type GiftCardStatus = "active" | "used" | "expired" | "cancelled";
 
 export interface GiftCard {
   id: string;
   code: string;
-  balance: number;
-  initialValue: number;
+  initialValue: Prisma.Decimal;
+  currentBalance: Prisma.Decimal;
   status: GiftCardStatus;
   expiresAt: Date;
   createdAt: Date;
-  usedAt?: Date;
-  usedBy?: string;
+  firstUsedAt?: Date;
+  purchasedBy?: string;
 }
 
 export interface Voucher {
   id: string;
   code: string;
+  name: string;
   discountType: "percentage" | "fixed";
-  discountValue: number;
-  maxUsages: number;
-  usageCount: number;
+  discountValue: Prisma.Decimal;
+  maxUsages: number | null;
+  currentUsages: number;
   expiresAt: Date;
-  minOrderValue?: number;
-  maxDiscount?: number;
+  startDate: Date;
+  minOrderValue?: Prisma.Decimal;
+  maxDiscount?: Prisma.Decimal;
   createdAt: Date;
 }
 
@@ -62,8 +66,8 @@ export class GiftCardVoucherService {
       const giftCard = await prisma.giftCard.create({
         data: {
           code,
-          balance: amount,
           initialValue: amount,
+          currentBalance: amount,
           status: "active",
           expiresAt,
         },
@@ -72,7 +76,7 @@ export class GiftCardVoucherService {
       return {
         id: giftCard.id,
         code: giftCard.code,
-        balance: giftCard.balance,
+        currentBalance: giftCard.currentBalance,
         initialValue: giftCard.initialValue,
         status: giftCard.status as GiftCardStatus,
         expiresAt: giftCard.expiresAt,
@@ -89,7 +93,7 @@ export class GiftCardVoucherService {
    */
   async bulkCreateGiftCards(
     quantity: number,
-    amount: number,
+    amount: Prisma.Decimal,
     expiryDays: number = 365
   ): Promise<GiftCard[]> {
     try {
@@ -102,8 +106,8 @@ export class GiftCardVoucherService {
         const giftCard = await prisma.giftCard.create({
           data: {
             code,
-            balance: amount,
-            initialValue: amount,
+            currentBalance: new Prisma.Decimal(amount),
+            initialValue: new Prisma.Decimal(amount),
             status: "active",
             expiresAt,
           },
@@ -112,7 +116,7 @@ export class GiftCardVoucherService {
         giftCards.push({
           id: giftCard.id,
           code: giftCard.code,
-          balance: giftCard.balance,
+          currentBalance: giftCard.currentBalance,
           initialValue: giftCard.initialValue,
           status: giftCard.status as GiftCardStatus,
           expiresAt: giftCard.expiresAt,
@@ -141,13 +145,13 @@ export class GiftCardVoucherService {
       return {
         id: giftCard.id,
         code: giftCard.code,
-        balance: giftCard.balance,
+        currentBalance: giftCard.currentBalance,
         initialValue: giftCard.initialValue,
         status: giftCard.status as GiftCardStatus,
         expiresAt: giftCard.expiresAt,
         createdAt: giftCard.createdAt,
-        usedAt: giftCard.usedAt || undefined,
-        usedBy: giftCard.usedBy || undefined,
+        firstUsedAt: giftCard.firstUsedAt || undefined,
+        purchasedBy: giftCard.purchasedBy || undefined,
       };
     } catch (error) {
       console.error("Error getting gift card:", error);
@@ -160,7 +164,7 @@ export class GiftCardVoucherService {
    */
   async validateGiftCard(
     code: string
-  ): Promise<{ valid: boolean; message: string; balance?: number }> {
+  ): Promise<{ valid: boolean; message: string; currentBalance?: Prisma.Decimal }> {
     try {
       const giftCard = await this.getGiftCard(code);
 
@@ -189,7 +193,7 @@ export class GiftCardVoucherService {
         return { valid: false, message: "Gift card has expired" };
       }
 
-      return { valid: true, message: "Gift card is valid", balance: giftCard.balance };
+      return { valid: true, message: "Gift card is valid", currentBalance: giftCard.currentBalance };
     } catch (error) {
       console.error("Error validating gift card:", error);
       return { valid: false, message: "Error validating gift card" };
@@ -204,7 +208,7 @@ export class GiftCardVoucherService {
     orderId: string,
     userId: string,
     amount: number
-  ): Promise<{ success: boolean; newBalance?: number; message: string }> {
+  ): Promise<{ success: boolean; newBalance?: Prisma.Decimal; message: string }> {
     try {
       const giftCard = await this.getGiftCard(code);
 
@@ -212,23 +216,22 @@ export class GiftCardVoucherService {
         return { success: false, message: "Gift card not found" };
       }
 
-      if (giftCard.balance < amount) {
+      if (giftCard.currentBalance.lessThan(amount)) {
         return {
           success: false,
-          message: `Insufficient balance. Available: $${giftCard.balance}`,
+          message: `Insufficient balance. Available: $${giftCard.currentBalance}`,
         };
       }
 
-      const newBalance = giftCard.balance - amount;
+      const newBalance = giftCard.currentBalance.minus(amount);
 
       // Update gift card
       await prisma.giftCard.update({
         where: { code },
         data: {
-          balance: newBalance,
-          status: newBalance === 0 ? "used" : "active",
-          usedAt: newBalance === 0 ? new Date() : undefined,
-          usedBy: userId,
+          currentBalance: newBalance,
+          status: newBalance.equals(new Prisma.Decimal(0)) ? "used" : "active",
+          firstUsedAt: newBalance.equals(new Prisma.Decimal(0)) ? new Date() : undefined,
         },
       });
 
@@ -256,10 +259,10 @@ export class GiftCardVoucherService {
   /**
    * Check gift card balance
    */
-  async checkBalance(code: string): Promise<number | null> {
+  async checkBalance(code: string): Promise<Prisma.Decimal | null> {
     try {
       const giftCard = await this.getGiftCard(code);
-      return giftCard?.balance || null;
+      return giftCard?.currentBalance || null;
     } catch (error) {
       console.error("Error checking balance:", error);
       return null;
@@ -292,12 +295,14 @@ export class GiftCardVoucherService {
    * Create voucher/coupon code
    */
   async createVoucher(
+    name: string,
     discountType: "percentage" | "fixed",
-    discountValue: number,
+    discountValue: Prisma.Decimal,
     maxUsages: number,
     expiryDays: number,
-    minOrderValue?: number,
-    maxDiscount?: number
+    startDate: Date = new Date(),
+    minOrderValue?: Prisma.Decimal,
+    maxDiscount?: Prisma.Decimal
   ): Promise<Voucher> {
     try {
       const code = this.generateVoucherCode();
@@ -306,23 +311,27 @@ export class GiftCardVoucherService {
       const voucher = await prisma.voucher.create({
         data: {
           code,
+          name,
           discountType,
-          discountValue,
+          discountValue: new Prisma.Decimal(discountValue),
           maxUsages,
           expiresAt,
-          minOrderValue,
-          maxDiscount,
+          startDate,
+          minOrderValue: minOrderValue ? new Prisma.Decimal(minOrderValue) : undefined,
+          maxDiscount: maxDiscount ? new Prisma.Decimal(maxDiscount) : undefined,
         },
       });
 
       return {
         id: voucher.id,
         code: voucher.code,
+        name: voucher.name,
         discountType: voucher.discountType as "percentage" | "fixed",
         discountValue: voucher.discountValue,
-        maxUsages: voucher.maxUsages,
-        usageCount: 0,
+        maxUsages: voucher.maxUsages || 0,
+        currentUsages: 0,
         expiresAt: voucher.expiresAt,
+        startDate: voucher.startDate,
         minOrderValue: voucher.minOrderValue || undefined,
         maxDiscount: voucher.maxDiscount || undefined,
         createdAt: voucher.createdAt,
@@ -338,8 +347,8 @@ export class GiftCardVoucherService {
    */
   async validateVoucher(
     code: string,
-    orderValue: number
-  ): Promise<{ valid: boolean; discount?: number; message: string }> {
+    orderValue: Prisma.Decimal
+  ): Promise<{ valid: boolean; discount?: Prisma.Decimal; message: string }> {
     try {
       const voucher = await prisma.voucher.findUnique({
         where: { code },
@@ -349,7 +358,7 @@ export class GiftCardVoucherService {
         return { valid: false, message: "Voucher code not found" };
       }
 
-      if (voucher.usageCount >= voucher.maxUsages) {
+      if (voucher.maxUsages !== null && voucher.currentUsages >= voucher.maxUsages) {
         return { valid: false, message: "Voucher has reached maximum usages" };
       }
 
@@ -357,7 +366,7 @@ export class GiftCardVoucherService {
         return { valid: false, message: "Voucher has expired" };
       }
 
-      if (voucher.minOrderValue && orderValue < voucher.minOrderValue) {
+      if (voucher.minOrderValue && orderValue.lessThan(voucher.minOrderValue)) {
         return {
           valid: false,
           message: `Minimum order value is $${voucher.minOrderValue}`,
@@ -365,10 +374,10 @@ export class GiftCardVoucherService {
       }
 
       // Calculate discount
-      let discount = 0;
+      let discount = new Prisma.Decimal(0);
       if (voucher.discountType === "percentage") {
-        discount = (orderValue * voucher.discountValue) / 100;
-        if (voucher.maxDiscount && discount > voucher.maxDiscount) {
+        discount = orderValue.times(voucher.discountValue).dividedBy(100);
+        if (voucher.maxDiscount && discount.greaterThan(voucher.maxDiscount)) {
           discount = voucher.maxDiscount;
         }
       } else {
@@ -389,7 +398,7 @@ export class GiftCardVoucherService {
   /**
    * Apply voucher to order
    */
-  async applyVoucher(code: string, orderId: string, discount: number): Promise<boolean> {
+  async applyVoucher(code: string, orderId: string, discount: Prisma.Decimal): Promise<boolean> {
     try {
       const voucher = await prisma.voucher.findUnique({
         where: { code },
@@ -400,8 +409,21 @@ export class GiftCardVoucherService {
       // Increment usage count
       await prisma.voucher.update({
         where: { code },
-        data: { usageCount: { increment: 1 } },
+        data: { currentUsages: { increment: 1 } },
       });
+
+      const order = await prisma.order.findUnique({
+        where: { id: orderId },
+        select: { total: true },
+      });
+
+      if (!order) {
+        console.error(`Order with ID ${orderId} not found.`);
+        return false;
+      }
+
+      const orderTotal = order.total;
+      const finalTotal = orderTotal.minus(discount);
 
       // Record usage
       await prisma.voucherUsage.create({
@@ -409,6 +431,8 @@ export class GiftCardVoucherService {
           voucherId: voucher.id,
           orderId,
           discountAmount: discount,
+          orderTotal: orderTotal,
+          finalTotal: finalTotal,
         },
       });
 
@@ -427,7 +451,7 @@ export class GiftCardVoucherService {
       const voucher = await prisma.voucher.findUnique({
         where: { code },
         include: {
-          usages: true,
+          usage: true,
         },
       });
 
@@ -436,9 +460,9 @@ export class GiftCardVoucherService {
       return {
         code: voucher.code,
         maxUsages: voucher.maxUsages,
-        usageCount: voucher.usageCount,
-        usagePercentage: ((voucher.usageCount / voucher.maxUsages) * 100).toFixed(2),
-        totalDiscount: voucher.usages.reduce((sum, u) => sum + u.discountAmount, 0),
+        usageCount: voucher.currentUsages,
+        usagePercentage: voucher.maxUsages ? ((voucher.currentUsages / voucher.maxUsages) * 100).toFixed(2) : "N/A",
+        totalDiscount: voucher.usage.reduce((sum, u) => sum.plus(u.discountAmount), new Prisma.Decimal(0)),
         expiresAt: voucher.expiresAt,
         daysUntilExpiry: Math.ceil(
           (voucher.expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)

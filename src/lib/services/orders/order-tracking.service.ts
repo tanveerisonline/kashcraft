@@ -3,37 +3,39 @@
  * Manages order status, shipment tracking, and notifications
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
+import { Prisma } from "@prisma/client";
 import { EventEmitter } from "events";
 
 export type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "out_for_delivery"
-  | "delivered"
-  | "cancelled"
-  | "returned";
+  | "PENDING"
+  | "CONFIRMED"
+  | "PROCESSING"
+  | "SHIPPED"
+  | "IN_TRANSIT"
+  | "OUT_FOR_DELIVERY"
+  | "DELIVERED"
+  | "CANCELLED"
+  | "RETURNED";
 
 export type TrackingEventType =
-  | "order_confirmed"
-  | "payment_received"
-  | "order_processing"
-  | "ready_for_shipment"
-  | "shipped"
-  | "in_transit"
-  | "out_for_delivery"
-  | "delivered"
-  | "delivery_failed"
-  | "returned"
-  | "returned_received";
+  | "ORDER_CONFIRMED"
+  | "PAYMENT_RECEIVED"
+  | "ORDER_PROCESSING"
+  | "READY_FOR_SHIPMENT"
+  | "SHIPPED"
+  | "IN_TRANSIT"
+  | "OUT_FOR_DELIVERY"
+  | "DELIVERED"
+  | "DELIVERY_FAILED"
+  | "RETURNED"
+  | "RETURNED_RECEIVED";
 
 export interface TrackingEvent {
   id: string;
   orderId: string;
   status: OrderStatus;
-  type: TrackingEventType;
+  statusType: TrackingEventType;
   timestamp: Date;
   location?: string;
   description: string;
@@ -44,7 +46,7 @@ export interface ShipmentInfo {
   orderId: string;
   trackingNumber: string;
   carrier: string;
-  estimatedDelivery: Date;
+  estimatedDelivery: Date | null;
   currentLocation: string;
   status: OrderStatus;
 }
@@ -85,15 +87,15 @@ export class OrderTrackingService extends EventEmitter {
           trackingNumber,
           carrier,
           estimatedDelivery,
-          currentStatus: "shipped",
+          currentStatus: "SHIPPED",
         },
       });
 
       // Log initial tracking event
       await this.addTrackingEvent(
         orderId,
-        "shipped",
-        "shipped",
+        "SHIPPED",
+        "SHIPPED",
         `Shipment created with ${carrier}`,
         trackingNumber
       );
@@ -112,7 +114,7 @@ export class OrderTrackingService extends EventEmitter {
         carrier,
         estimatedDelivery,
         currentLocation: "Origin",
-        status: "shipped",
+        status: "SHIPPED",
       };
     } catch (error) {
       console.error("Error creating tracking:", error);
@@ -170,9 +172,9 @@ export class OrderTrackingService extends EventEmitter {
    * Add tracking event
    */
   async addTrackingEvent(
-    orderId: string,
-    status: OrderStatus,
-    type: TrackingEventType,
+      orderId: string,
+      status: OrderStatus,
+      statusType: TrackingEventType,
     description: string,
     trackingNumber?: string,
     location?: string
@@ -182,7 +184,7 @@ export class OrderTrackingService extends EventEmitter {
         data: {
           orderId,
           status,
-          type,
+          statusType,
           description,
           trackingNumber,
           location,
@@ -193,7 +195,7 @@ export class OrderTrackingService extends EventEmitter {
         id: event.id,
         orderId: event.orderId,
         status: event.status as OrderStatus,
-        type: event.type as TrackingEventType,
+        statusType: event.statusType as TrackingEventType,
         timestamp: event.timestamp,
         location: event.location || undefined,
         description: event.description,
@@ -219,7 +221,7 @@ export class OrderTrackingService extends EventEmitter {
         id: event.id,
         orderId: event.orderId,
         status: event.status as OrderStatus,
-        type: event.type as TrackingEventType,
+        statusType: event.statusType as TrackingEventType,
         timestamp: event.timestamp,
         location: event.location || undefined,
         description: event.description,
@@ -363,7 +365,7 @@ export class OrderTrackingService extends EventEmitter {
           estimatedDelivery: {
             lte: sevenDaysLater,
           },
-          currentStatus: { in: ["shipped", "in_transit", "out_for_delivery"] },
+          currentStatus: { in: ["SHIPPED", "IN_TRANSIT", "OUT_FOR_DELIVERY"] },
         },
         orderBy: { estimatedDelivery: "asc" },
         include: {
@@ -388,25 +390,25 @@ export class OrderTrackingService extends EventEmitter {
     try {
       const orders = await prisma.order.findMany({
         where: {
-          status: "delivered",
+          status: "DELIVERED",
         },
       });
 
       const delivering = await prisma.order.count({
         where: {
-          status: { in: ["shipped", "in_transit", "out_for_delivery"] },
+          status: { in: ["SHIPPED", "IN_TRANSIT", "OUT_FOR_DELIVERY"] },
         },
       });
 
       const delayed = await prisma.orderTracking.count({
         where: {
-          AND: [{ estimatedDelivery: { lt: new Date() } }, { currentStatus: { not: "delivered" } }],
+          AND: [{ estimatedDelivery: { lt: new Date() } }, { currentStatus: { not: "DELIVERED" } }],
         },
       });
 
       // Calculate average delivery time
       const deliveredOrders = await prisma.order.findMany({
-        where: { status: "delivered" },
+        where: { status: "DELIVERED" },
         select: { createdAt: true, updatedAt: true },
       });
 
@@ -438,14 +440,14 @@ export class OrderTrackingService extends EventEmitter {
    */
   private mapCarrierStatus(carrierStatus: string): OrderStatus {
     const statusMap: Record<string, OrderStatus> = {
-      in_transit: "in_transit",
-      out_for_delivery: "out_for_delivery",
-      delivered: "delivered",
-      failed: "delivery_failed",
-      returned: "returned",
+      in_transit: "OUT_FOR_DELIVERY", // Assuming in_transit maps to OUT_FOR_DELIVERY for simplicity, adjust if needed
+      out_for_delivery: "OUT_FOR_DELIVERY",
+      delivered: "DELIVERED",
+      failed: "CANCELLED", // Assuming failed maps to CANCELLED, adjust if needed
+      returned: "RETURNED",
     };
 
-    return statusMap[carrierStatus.toLowerCase()] || "in_transit";
+    return statusMap[carrierStatus.toLowerCase()] || "OUT_FOR_DELIVERY";
   }
 
   /**
@@ -453,14 +455,14 @@ export class OrderTrackingService extends EventEmitter {
    */
   private mapCarrierStatusToEvent(carrierStatus: string): TrackingEventType {
     const eventMap: Record<string, TrackingEventType> = {
-      in_transit: "in_transit",
-      out_for_delivery: "out_for_delivery",
-      delivered: "delivered",
-      failed: "delivery_failed",
-      returned: "returned",
+      in_transit: "IN_TRANSIT",
+      out_for_delivery: "OUT_FOR_DELIVERY",
+      delivered: "DELIVERED",
+      failed: "DELIVERY_FAILED",
+      returned: "RETURNED",
     };
 
-    return eventMap[carrierStatus.toLowerCase()] || "in_transit";
+    return eventMap[carrierStatus.toLowerCase()] || "IN_TRANSIT";
   }
 
   /**
@@ -492,15 +494,15 @@ export class OrderTrackingService extends EventEmitter {
    */
   private getNotificationType(status: OrderStatus): string {
     const types: Record<OrderStatus, string> = {
-      pending: "order_confirmed",
-      confirmed: "payment_received",
-      processing: "processing",
-      shipped: "shipped",
-      in_transit: "in_transit",
-      out_for_delivery: "out_for_delivery",
-      delivered: "delivered",
-      cancelled: "cancelled",
-      returned: "returned",
+      PENDING: "ORDER_CONFIRMED",
+      CONFIRMED: "PAYMENT_RECEIVED",
+      PROCESSING: "ORDER_PROCESSING",
+      SHIPPED: "SHIPPED",
+      IN_TRANSIT: "IN_TRANSIT",
+      OUT_FOR_DELIVERY: "OUT_FOR_DELIVERY",
+      DELIVERED: "DELIVERED",
+      CANCELLED: "CANCELLED",
+      RETURNED: "RETURNED",
     };
 
     return types[status] || "status_updated";

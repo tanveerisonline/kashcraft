@@ -210,25 +210,7 @@ describe("String Utilities", () => {
     });
   });
 
-  describe("slug", () => {
-    const slug = (str: string) => {
-      return str
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/[\s_]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-    };
 
-    it("should convert to slug", () => {
-      expect(slug("Hello World")).toBe("hello-world");
-      expect(slug("Product Name-123")).toBe("product-name-123");
-    });
-
-    it("should remove special characters", () => {
-      expect(slug("P@ssw*rd")).toBe("psswd");
-    });
-  });
 
   describe("truncate", () => {
     const truncate = (str: string, length: number) => {

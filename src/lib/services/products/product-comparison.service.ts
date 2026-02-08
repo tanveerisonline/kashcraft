@@ -3,7 +3,7 @@
  * Allows side-by-side comparison of up to 4 products with highlighted differences
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 
 export interface ComparisonProduct {
   id: string;
@@ -76,7 +76,7 @@ export class ProductComparisonService {
       const products = await prisma.product.findMany({
         where: { id: { in: ids } },
         include: {
-          category: { select: { name: true } },
+          category: { select: { name: true, imageUrl: true } },
           inventory: { select: { quantity: true } },
           reviews: { select: { rating: true } },
         },
@@ -95,17 +95,20 @@ export class ProductComparisonService {
       const comparisonProducts: ComparisonProduct[] = products.map((p) => ({
         id: p.id,
         name: p.name,
-        price: p.price,
-        image: p.image || "",
-        rating: p.averageRating,
+        price: p.price.toNumber(),
+        image: p.category?.imageUrl || "",
+        rating: p.reviews.length > 0
+          ? p.reviews.reduce((acc, review) => acc + review.rating, 0) /
+            p.reviews.length
+          : 0,
         description: p.description || "",
         sku: p.sku || "",
         category: p.category?.name || "",
         weight: p.weight,
-        dimensions: p.dimensions,
-        color: p.color,
+
+
         material: p.material,
-        warranty: p.warranty,
+
         inStock: (p.inventory?.quantity || 0) > 0,
       }));
 

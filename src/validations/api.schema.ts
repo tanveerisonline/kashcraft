@@ -137,7 +137,7 @@ export const voucharValidateSchema = z.object({
 
 // ============ CURRENCY VALIDATION ============
 export const currencyDetectSchema = z.object({
-  ip: z.string().ip().optional(),
+  ip: z.string().ip({ version: "v4" }).optional(),
 });
 
 export const currencyConvertSchema = z.object({

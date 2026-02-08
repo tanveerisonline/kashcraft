@@ -1,3 +1,4 @@
+import React from 'react';
 import Image, { ImageProps, StaticImageData } from 'next/image';
 import { CSSProperties, useState } from 'react';
 

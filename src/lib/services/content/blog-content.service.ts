@@ -3,7 +3,7 @@
  * Manages blog posts, categories, and SEO optimization
  */
 
-import { prisma } from '@/lib/db/prisma';
+import prisma from '@/lib/db/prisma';
 import { slugify } from '@/lib/utils/string-utils';
 
 export type BlogPostStatus = 'draft' | 'published' | 'archived';
@@ -424,7 +424,7 @@ export class BlogContentService {
         where: { status: 'published' },
         orderBy: { viewCount: 'desc' },
         take: 5,
-        select: { title: slug: true, viewCount: true },
+        select: { title: true, slug: true, viewCount: true },
       });
 
       return {

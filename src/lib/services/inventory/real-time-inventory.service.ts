@@ -4,13 +4,13 @@
  * Supports WebSockets for real-time updates to clients
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 import { EventEmitter } from "events";
 import { AppError } from "@/lib/middleware/app-error";
 
 export interface StockLevel {
   productId: string;
-  sku: string;
+  sku: string | null;
   quantity: number;
   reserved: number;
   available: number;
@@ -143,7 +143,7 @@ export class RealTimeInventoryService extends EventEmitter {
       if (!updated) throw new AppError(404, "Product not found", "PRODUCT_NOT_FOUND", true);
 
       // Emit inventory change event
-      this.emit("inventory-updated", { productId, ...updated });
+      this.emit("inventory-updated", { ...updated });
 
       // Check for low stock
       if (updated.isLowStock) {
@@ -326,8 +326,10 @@ export class RealTimeInventoryService extends EventEmitter {
 
     this.isProcessing = true;
 
+    let batch: InventoryUpdate[] = []; // Declare batch here
+
     try {
-      const batch = this.updateQueue.splice(0, 50); // Process 50 at a time
+      batch = this.updateQueue.splice(0, 50); // Process 50 at a time
 
       for (const update of batch) {
         const product = await prisma.product.findUnique({
@@ -339,7 +341,7 @@ export class RealTimeInventoryService extends EventEmitter {
           update.sku = product.sku || "";
 
           // Update inventory
-          await prisma.inventory.update({
+          const updatedInventory = await prisma.inventory.update({
             where: { productId: update.productId },
             data: {
               quantity: { increment: update.quantityChange },
@@ -351,6 +353,7 @@ export class RealTimeInventoryService extends EventEmitter {
             data: {
               productId: update.productId,
               quantityChange: update.quantityChange,
+              newQuantity: updatedInventory.quantity,
               reason: update.reason,
               userId: update.userId,
               notes: update.notes,

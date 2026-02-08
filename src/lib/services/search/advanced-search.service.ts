@@ -3,7 +3,8 @@
  * Provides faceted search, range filters, multi-select filters, and search history
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
+import { Prisma } from "@prisma/client";
 
 export interface SearchFilter {
   field: string;
@@ -43,10 +44,17 @@ export interface SearchHistory {
   id: string;
   userId: string;
   query: string;
-  filters?: SearchFilter[];
+  filters: string | null; // Changed to string | null to match Prisma's return type
   timestamp: Date;
   resultCount: number;
-  clickedProduct?: string;
+  clickedProduct: string | null; // Changed to string | null
+}
+
+export interface PopularSearch {
+  query: string;
+  _count: {
+    query: number;
+  };
 }
 
 /**
@@ -96,7 +104,7 @@ export class AdvancedSearchService {
       }
 
       // Apply filters
-      this.applyFilters(where, filters);
+      applyFilters(where, filters);
 
       // Determine sort
       let orderBy: any = { createdAt: "desc" };
@@ -127,11 +135,11 @@ export class AdvancedSearchService {
       });
 
       // Calculate facets
-      const facets = await this.calculateFacets(where);
+      const facets = await calculateFacets(where);
 
       // Record search history
       if (userId) {
-        await this.recordSearchHistory(userId, query, filters, total);
+        await recordSearchHistory(userId, query, filters, total);
       }
 
       return {
@@ -143,112 +151,6 @@ export class AdvancedSearchService {
       };
     } catch (error) {
       console.error("Error searching products:", error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get faceted results for a specific field
-   */
-  async getFacet(field: string, where?: any): Promise<Facet> {
-    try {
-      let values: FacetValue[] = [];
-
-      if (field === "category") {
-        const categories = await prisma.category.findMany({
-          include: {
-            products: {
-              where: where || { isActive: true },
-              select: { id: true },
-            },
-          },
-        });
-
-        values = categories
-          .filter((cat) => cat.products.length > 0)
-          .map((cat) => ({
-            label: cat.name,
-            value: cat.id,
-            count: cat.products.length,
-          }));
-      } else if (field === "price") {
-        // Price ranges
-        const priceRanges = [
-          { label: "Under $50", min: 0, max: 50 },
-          { label: "$50 - $100", min: 50, max: 100 },
-          { label: "$100 - $500", min: 100, max: 500 },
-          { label: "$500+", min: 500, max: Infinity },
-        ];
-
-        for (const range of priceRanges) {
-          const count = await prisma.product.count({
-            where: {
-              ...where,
-              price: { gte: range.min, lte: range.max },
-            },
-          });
-
-          if (count > 0) {
-            values.push({
-              label: range.label,
-              value: `${range.min}-${range.max}`,
-              count,
-            });
-          }
-        }
-      } else if (field === "rating") {
-        // Rating facets
-        for (let rating = 5; rating >= 1; rating--) {
-          const count = await prisma.product.count({
-            where: {
-              ...where,
-              averageRating: { gte: rating, lt: rating + 1 },
-            },
-          });
-
-          if (count > 0) {
-            values.push({
-              label: `${rating}+ stars`,
-              value: rating.toString(),
-              count,
-            });
-          }
-        }
-      } else if (field === "inStock") {
-        const inStock = await prisma.product.count({
-          where: {
-            ...where,
-            inventory: { quantity: { gt: 0 } },
-          },
-        });
-
-        const outOfStock = await prisma.product.count({
-          where: {
-            ...where,
-            inventory: { quantity: { lte: 0 } },
-          },
-        });
-
-        if (inStock > 0) {
-          values.push({
-            label: "In Stock",
-            value: "true",
-            count: inStock,
-          });
-        }
-
-        if (outOfStock > 0) {
-          values.push({
-            label: "Out of Stock",
-            value: "false",
-            count: outOfStock,
-          });
-        }
-      }
-
-      return { field, values };
-    } catch (error) {
-      console.error("Error getting facet:", error);
       throw error;
     }
   }
@@ -327,14 +229,15 @@ export class AdvancedSearchService {
   /**
    * Get popular searches
    */
-  async getPopularSearches(limit: number = 10): Promise<any[]> {
+  async getPopularSearches(limit: number = 10): Promise<PopularSearch[]> {
     try {
-      return await prisma.searchHistory.groupBy({
+      const popularSearches = await prisma.searchHistory.groupBy({
         by: ["query"],
         _count: { query: true },
-        orderBy: { _count: { query: "desc" } },
+        orderBy: [{ _count: { query: "desc" } }],
         take: limit,
       });
+      return popularSearches as PopularSearch[];
     } catch (error) {
       console.error("Error getting popular searches:", error);
       return [];
@@ -361,91 +264,196 @@ export class AdvancedSearchService {
       console.error("Error recording search click:", error);
     }
   }
+}
 
-  /**
-   * Apply filters to where clause
-   */
-  private applyFilters(where: any, filters: SearchFilter[]): void {
-    for (const filter of filters) {
-      if (filter.field === "category") {
-        where.categoryId = {
-          in: Array.isArray(filter.values) ? filter.values : [],
-        };
-      } else if (filter.field === "price") {
-        if (typeof filter.values === "object" && "min" in filter.values) {
-          where.price = {
-            gte: filter.values.min || 0,
-            lte: filter.values.max || Infinity,
-          };
-        }
-      } else if (filter.field === "rating") {
-        where.averageRating = {
-          gte: parseInt(filter.values as any),
-        };
-      } else if (filter.field === "inStock") {
-        if (filter.values === "true" || filter.values === true) {
-          where.inventory = { quantity: { gt: 0 } };
-        }
-      } else if (filter.field === "brand") {
-        where.brand = {
-          in: Array.isArray(filter.values) ? filter.values : [],
+/**
+ * Record search in history
+ */
+async function recordSearchHistory(
+  userId: string,
+  query: string,
+  filters: SearchFilter[],
+  resultCount: number
+): Promise<void> {
+  try {
+    await prisma.searchHistory.create({
+      data: {
+        userId,
+        query,
+        resultCount,
+      },
+    });
+  } catch (error) {
+    console.error("Error recording search history:", error);
+  }
+}
+
+/**
+ * Apply filters to where clause
+ */
+function applyFilters(where: any, filters: SearchFilter[]): void {
+  for (const filter of filters) {
+    if (filter.field === "category") {
+      where.categoryId = {
+        in: Array.isArray(filter.values) ? filter.values : [],
+      };
+    } else if (filter.field === "price") {
+      if (typeof filter.values === "object" && "min" in filter.values) {
+        where.price = {
+          gte: filter.values.min || 0,
+          lte: filter.values.max || Infinity,
         };
       }
-    }
-  }
-
-  /**
-   * Calculate facets for current results
-   */
-  private async calculateFacets(where: any): Promise<Facet[]> {
-    try {
-      const facets: Facet[] = [];
-
-      // Get category facet
-      const categories = await this.getFacet("category", where);
-      if (categories.values.length > 0) facets.push(categories);
-
-      // Get price facet
-      const price = await this.getFacet("price", where);
-      if (price.values.length > 0) facets.push(price);
-
-      // Get rating facet
-      const rating = await this.getFacet("rating", where);
-      if (rating.values.length > 0) facets.push(rating);
-
-      // Get stock facet
-      const stock = await this.getFacet("inStock", where);
-      if (stock.values.length > 0) facets.push(stock);
-
-      return facets;
-    } catch (error) {
-      console.error("Error calculating facets:", error);
-      return [];
-    }
-  }
-
-  /**
-   * Record search in history
-   */
-  private async recordSearchHistory(
-    userId: string,
-    query: string,
-    filters: SearchFilter[],
-    resultCount: number
-  ): Promise<void> {
-    try {
-      await prisma.searchHistory.create({
-        data: {
-          userId,
-          query,
-          resultCount,
-        },
-      });
-    } catch (error) {
-      console.error("Error recording search history:", error);
+    } else if (filter.field === "rating") {
+      where.averageRating = {
+        gte: parseInt(filter.values as any),
+      };
+    } else if (filter.field === "inStock") {
+      if (typeof filter.values === "string" && filter.values === "true") {
+        where.inventory = { quantity: { gt: 0 } };
+      } else if (typeof filter.values === "boolean" && filter.values === true) {
+        where.inventory = { quantity: { gt: 0 } };
+      }
+    } else if (filter.field === "brand") {
+      where.brand = {
+        in: Array.isArray(filter.values) ? filter.values : [],
+      };
     }
   }
 }
 
-// Export singleton instance
-export const advancedSearchService = AdvancedSearchService.getInstance();
+/**
+ * Calculate facets for current results
+ */
+async function calculateFacets(where: any): Promise<Facet[]> {
+  try {
+    const facets: Facet[] = [];
+
+    // Get category facet
+    const categories = await getFacet("category", where);
+    if (categories.values.length > 0) facets.push(categories);
+
+    // Get price facet
+    const price = await getFacet("price", where);
+    if (price.values.length > 0) facets.push(price);
+
+    // Get rating facet
+    const rating = await getFacet("rating", where);
+    if (rating.values.length > 0) facets.push(rating);
+
+    // Get stock facet
+    const stock = await getFacet("inStock", where);
+    if (stock.values.length > 0) facets.push(stock);
+
+    return facets;
+  } catch (error) {
+    console.error("Error calculating facets:", error);
+    return [];
+  }
+}
+
+/**
+ * Get faceted results for a specific field
+ */
+async function getFacet(field: string, where?: any): Promise<Facet> {
+  try {
+    let values: FacetValue[] = [];
+
+    if (field === "category") {
+      const categories = await prisma.category.findMany({
+        include: {
+          products: {
+            where: where || { isActive: true },
+            select: { id: true },
+          },
+        },
+      });
+
+      values = categories
+        .filter((cat) => cat.products.length > 0)
+        .map((cat) => ({
+          label: cat.name,
+          value: cat.id,
+          count: cat.products.length,
+        }));
+    } else if (field === "price") {
+      // Price ranges
+      const priceRanges = [
+        { label: "Under $50", min: 0, max: 50 },
+        { label: "$50 - $100", min: 50, max: 100 },
+        { label: "$100 - $500", min: 100, max: 500 },
+        { label: "$500+", min: 500, max: Infinity },
+      ];
+
+      for (const range of priceRanges) {
+        const count = await prisma.product.count({
+          where: {
+            ...where,
+            price: { gte: range.min, lte: range.max },
+          },
+        });
+
+        if (count > 0) {
+          values.push({
+            label: range.label,
+            value: `${range.min}-${range.max}`,
+            count,
+          });
+        }
+      }
+    } else if (field === "rating") {
+      // Rating facets
+      for (let rating = 5; rating >= 1; rating--) {
+        const count = await prisma.product.count({
+          where: {
+            ...where,
+            averageRating: { gte: rating, lt: rating + 1 },
+          },
+        });
+
+        if (count > 0) {
+          values.push({
+            label: `${rating}+ stars`,
+            value: rating.toString(),
+            count,
+          });
+        }
+      }
+    } else if (field === "inStock") {
+      const inStock = await prisma.product.count({
+        where: {
+          ...where,
+          inventory: { quantity: { gt: 0 } },
+        },
+      });
+
+      const outOfStock = await prisma.product.count({
+        where: {
+          ...where,
+          inventory: { quantity: { lte: 0 } },
+        },
+      });
+
+      if (inStock > 0) {
+        values.push({
+          label: "In Stock",
+          value: "true",
+          count: inStock,
+        });
+      }
+
+      if (outOfStock > 0) {
+        values.push({
+          label: "Out of Stock",
+          value: "false",
+          count: outOfStock,
+        });
+      }
+    }
+
+    return { field, values };
+  } catch (error) {
+    console.error("Error getting facet:", error);
+    throw error;
+  }
+}

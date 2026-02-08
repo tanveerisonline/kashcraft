@@ -36,7 +36,7 @@ export const productFactory = {
     stock: faker.number.int({ min: 0, max: 100 }),
     categoryId: faker.string.uuid(),
     image: faker.image.url(),
-    rating: faker.number.float({ min: 0, max: 5, precision: 0.1 }),
+    rating: faker.number.float({ min: 0, max: 5, fractionDigits: 1 }),
     reviews: faker.number.int({ min: 0, max: 500 }),
     featured: faker.datatype.boolean(),
     createdAt: faker.date.past(),
@@ -79,7 +79,7 @@ export const orderFactory = {
   create: (overrides?: any) => ({
     id: faker.string.uuid(),
     userId: faker.string.uuid(),
-    orderNumber: faker.string.alphaNumeric(10).toUpperCase(),
+    orderNumber: faker.string.alphanumeric(10).toUpperCase(),
     status: "PENDING",
     subtotal: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
     tax: parseFloat(faker.commerce.price({ min: 0, max: 50 })),
@@ -162,9 +162,9 @@ export const cartItemFactory = {
 export const couponFactory = {
   create: (overrides?: any) => ({
     id: faker.string.uuid(),
-    code: faker.string.alphaNumeric(8).toUpperCase(),
+    code: faker.string.alphanumeric(8).toUpperCase(),
     type: faker.helpers.arrayElement(["PERCENTAGE", "FIXED"]),
-    discount: faker.number.float({ min: 5, max: 50, precision: 0.01 }),
+    discount: faker.number.float({ min: 5, max: 50, fractionDigits: 2 }),
     minOrderAmount: parseFloat(faker.commerce.price({ min: 0, max: 100 })),
     maxUses: faker.number.int({ min: 10, max: 1000 }),
     used: faker.number.int({ min: 0, max: 10 }),

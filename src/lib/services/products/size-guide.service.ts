@@ -3,7 +3,7 @@
  * Manages product-specific size charts, measurements, and conversion guides
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 
 export interface SizeGuide {
   id: string;
@@ -92,8 +92,8 @@ export class SizeGuideService {
   async createSizeGuide(
     name: string,
     measurements: SizeMeasurement[],
+    categoryId: string,
     productId?: string,
-    categoryId?: string,
     fitDescription?: string,
     images?: string[]
   ): Promise<SizeGuide> {
@@ -105,7 +105,7 @@ export class SizeGuideService {
           productId,
           categoryId,
           fitDescription,
-          images: images ? JSON.stringify(images) : undefined,
+          fitImages: images ? JSON.stringify(images) : undefined,
         },
       });
 

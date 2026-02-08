@@ -3,7 +3,7 @@
  * Enables one-click checkout with saved payment methods and addresses
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 import { AppError } from "@/lib/middleware/app-error";
 
 export interface SavedPaymentMethod {
@@ -42,8 +42,9 @@ export interface QuickCheckoutSession {
   quantity: number;
   paymentMethodId: string;
   shippingAddressId: string;
-  billingAddressId?: string;
+  billingAddressId?: string | null;
   createdAt: Date;
+  expiresAt: Date;
 }
 
 /**
@@ -437,6 +438,7 @@ export class QuickBuyService {
         shippingAddressId,
         billingAddressId,
         createdAt: new Date(),
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Session expires in 1 hour
       };
 
       // Store in cache (would use Redis in production)

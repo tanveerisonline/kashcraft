@@ -40,7 +40,7 @@ export interface ApiMetrics {
   method: string;
   statusCode: number;
   duration: number;
-  timestamp: number;
+  timestamp?: number;
   responseSize?: number;
   cacheStatus?: "hit" | "miss";
 }
@@ -214,6 +214,7 @@ export interface CoreWebVitals {
   fid?: number; // First Input Delay
   cls?: number; // Cumulative Layout Shift
   ttfb?: number; // Time to First Byte
+  [key: string]: any; // Add index signature to allow for arbitrary properties
 }
 
 /**

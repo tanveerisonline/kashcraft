@@ -1,10 +1,16 @@
+declare global {
+  interface Window {
+    analytics: any; // Replace 'any' with a more specific type if known
+  }
+}
+
 /**
  * Third-Party Script Optimization
  * Implements: deferred loading, async loading, intelligent preloading
  */
 
 import React from 'react';
-import Script from 'next/script';
+import Script, { ScriptProps } from "next/script";
 
 interface ThirdPartyScriptConfig {
   id: string;

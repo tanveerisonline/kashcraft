@@ -236,14 +236,25 @@ export const withQueryTimeout = async <T>(
 /**
  * Optimize findMany queries - select only needed fields
  */
-export const optimizedFindMany = async (prisma: PrismaClient, model: keyof ReturnType<typeof QueryOptimizer.getOptimalSelects>, options: any = {}) => {
+type PrismaModelName = keyof ReturnType<typeof QueryOptimizer.getOptimalSelects>;
+
+export const optimizedFindMany = async (
+  prisma: PrismaClient,
+  model: PrismaModelName,
+  options: any = {}
+) => {
   const defaults = {
     take: 20,
     skip: 0,
     select: QueryOptimizer.getOptimalSelects()[model],
   };
 
-  return prisma[model as keyof PrismaClient].findMany({
+  // Ensure the model exists and has a findMany method
+  if (!(model in prisma) || typeof (prisma[model] as any).findMany !== 'function') {
+    throw new Error(`Model '${String(model)}' not found or does not have a findMany method on PrismaClient.`);
+  }
+
+  return (prisma[model] as any).findMany({
     ...defaults,
     ...options,
   });

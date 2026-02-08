@@ -1,7 +1,9 @@
-import { advancedSearchService } from "@/lib/services/search/advanced-search.service";
+import { AdvancedSearchService } from "@/lib/services/search/advanced-search.service";
 import { validateBody } from "@/lib/middleware/validation-helper";
 import { searchProductsSchema, type SearchProductsInput } from "@/validations/api.schema";
 import { NextRequest, NextResponse } from "next/server";
+
+const advancedSearchService = AdvancedSearchService.getInstance();
 import { ApiResponseHandler } from "@/lib/api/response";
 
 export const POST = validateBody<SearchProductsInput>(searchProductsSchema)(async (

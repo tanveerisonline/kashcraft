@@ -167,7 +167,7 @@ export const createRateLimitMiddleware = (config: RateLimitConfig) => {
     }
 
     // Continue with response and add rate limit headers
-    const response = request.next?.() || new NextResponse();
+    const response = NextResponse.next();
     response.headers.set("X-RateLimit-Limit", config.maxRequests.toString());
     response.headers.set("X-RateLimit-Remaining", result.remaining.toString());
     response.headers.set("X-RateLimit-Reset", new Date(result.resetTime).toISOString());

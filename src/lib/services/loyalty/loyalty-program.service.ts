@@ -3,7 +3,7 @@
  * Manages points system, tier levels, and rewards redemption
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 import { EventEmitter } from "events";
 
 export type TierLevel = "bronze" | "silver" | "gold" | "platinum";
@@ -136,7 +136,7 @@ export class LoyaltyProgramService extends EventEmitter {
         account = await prisma.loyaltyAccount.create({
           data: {
             userId,
-            tier: "bronze",
+            currentTier: "bronze",
             totalPoints: this.pointsValues.signupBonus,
             availablePoints: this.pointsValues.signupBonus,
             totalSpent: 0,
@@ -149,7 +149,8 @@ export class LoyaltyProgramService extends EventEmitter {
           userId,
           this.pointsValues.signupBonus,
           "earned",
-          "Welcome bonus for new member"
+          "Welcome bonus for new member",
+          "signup_bonus"
         );
 
         this.emit("member-joined", { userId, bonus: this.pointsValues.signupBonus });
@@ -174,7 +175,7 @@ export class LoyaltyProgramService extends EventEmitter {
       if (!account) return null;
 
       // Calculate tier
-      const tier = this.calculateTier(account.totalPoints, account.totalSpent);
+      const tier = this.calculateTier(account.totalPoints, Number(account.totalSpent));
       const tierBenefit = this.tierBenefits.find((t) => t.tier === tier);
 
       return {
@@ -182,9 +183,9 @@ export class LoyaltyProgramService extends EventEmitter {
         tier,
         totalPoints: account.totalPoints,
         availablePoints: account.availablePoints,
-        totalSpent: account.totalSpent,
+        totalSpent: Number(account.totalSpent),
         totalPurchases: account.totalPurchases,
-        tierProgress: this.getTierProgress(tier, account.totalSpent),
+        tierProgress: this.getTierProgress(tier, Number(account.totalSpent)),
         nextTierRequirement: this.getNextTierRequirement(tier),
         memberSince: account.createdAt,
       };
@@ -212,7 +213,7 @@ export class LoyaltyProgramService extends EventEmitter {
       }
 
       // Calculate multiplier based on tier
-      const tier = this.calculateTier(account?.totalPoints || 0, account?.totalSpent || 0);
+      const tier = this.calculateTier(account?.totalPoints || 0, Number(account?.totalSpent || 0));
       const multiplier = this.tierBenefits.find((t) => t.tier === tier)?.pointsMultiplier || 1;
 
       const points = Math.floor(orderAmount * this.pointsValues.purchaseMultiplier * multiplier);
@@ -229,7 +230,7 @@ export class LoyaltyProgramService extends EventEmitter {
       });
 
       // Log transaction
-      await this.addPointsHistory(userId, points, "earned", `Purchase order #${orderId}`, orderId);
+      await this.addPointsHistory(userId, points, "earned", `Purchase order #${orderId}`, "purchase", orderId);
 
       this.emit("points-earned", { userId, points, orderId, tier });
 
@@ -280,6 +281,7 @@ export class LoyaltyProgramService extends EventEmitter {
         points,
         "redeemed",
         `Redeemed for $${discount.toFixed(2)} discount`,
+        "redemption",
         rewardId
       );
 
@@ -301,11 +303,21 @@ export class LoyaltyProgramService extends EventEmitter {
    */
   async getPointsHistory(userId: string, limit: number = 50): Promise<PointsHistory[]> {
     try {
-      return await prisma.pointsHistory.findMany({
+      const history = await prisma.pointsHistory.findMany({
         where: { userId },
-        orderBy: { timestamp: "desc" },
+        orderBy: { createdAt: "desc" },
         take: limit,
       });
+
+      return history.map((item) => ({
+        id: item.id,
+        userId: item.userId,
+        amount: item.pointsAmount,
+        type: item.pointsType as "earned" | "redeemed" | "expired" | "adjusted",
+        reason: item.reason || "",
+        transactionId: item.sourceId || undefined,
+        timestamp: item.createdAt,
+      }));
     } catch (error) {
       console.error("Error getting points history:", error);
       return [];
@@ -353,14 +365,16 @@ export class LoyaltyProgramService extends EventEmitter {
         referrerId,
         this.pointsValues.referralBonus,
         "earned",
-        `Referral bonus for user ${refereeId}`
+        `Referral bonus for user ${refereeId}`,
+        "referral_bonus"
       );
 
       await this.addPointsHistory(
         refereeId,
         this.pointsValues.referralBonus,
         "earned",
-        `Welcome bonus - referred by ${referrerId}`
+        `Welcome bonus - referred by ${referrerId}`,
+        "referral_bonus"
       );
 
       this.emit("referral-bonus", { referrerId, refereeId });
@@ -397,7 +411,8 @@ export class LoyaltyProgramService extends EventEmitter {
         userId,
         this.pointsValues.reviewBonus,
         "earned",
-        `Review bonus for product ${productId}`
+        `Review bonus for product ${productId}`,
+        "review_bonus"
       );
 
       this.emit("review-bonus", { userId, productId });
@@ -418,7 +433,7 @@ export class LoyaltyProgramService extends EventEmitter {
           userId: true,
           totalPoints: true,
           totalSpent: true,
-          tier: true,
+          currentTier: true,
         },
       });
     } catch (error) {
@@ -441,7 +456,7 @@ export class LoyaltyProgramService extends EventEmitter {
       });
 
       const membersByTier = await prisma.loyaltyAccount.groupBy({
-        by: ["tier"],
+        by: ["currentTier"],
         _count: true,
       });
 
@@ -450,7 +465,7 @@ export class LoyaltyProgramService extends EventEmitter {
         totalPointsIssued: totalPoints._sum?.totalPoints || 0,
         totalMemberSpent: totalSpent._sum?.totalSpent || 0,
         averageSpentPerMember:
-          totalMembers > 0 ? (totalSpent._sum?.totalSpent || 0) / totalMembers : 0,
+          totalMembers > 0 ? Number(totalSpent._sum?.totalSpent || 0) / totalMembers : 0,
         membersByTier: membersByTier.reduce((acc: any, tier: any) => {
           acc[tier.tier] = tier._count;
           return acc;
@@ -513,16 +528,18 @@ export class LoyaltyProgramService extends EventEmitter {
     amount: number,
     type: "earned" | "redeemed" | "expired" | "adjusted",
     reason: string,
+    sourceType: string,
     transactionId?: string
   ): Promise<void> {
     try {
       await prisma.pointsHistory.create({
         data: {
           userId,
-          amount,
-          type,
+          pointsAmount: amount,
+          pointsType: type,
           reason,
-          transactionId,
+          sourceType,
+          sourceId: transactionId,
         },
       });
     } catch (error) {

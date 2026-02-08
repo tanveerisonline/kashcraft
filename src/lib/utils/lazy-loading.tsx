@@ -1,4 +1,4 @@
-import { ComponentType, ReactNode, Suspense, lazy } from 'react';
+import React, { ComponentType, ReactNode, Suspense, lazy } from 'react';
 
 // Prompt 137: Lazy Loading Implementation
 
@@ -9,12 +9,10 @@ export const dynamicImport = <T extends Record<string, any>>(
   importFunc: () => Promise<{ default: ComponentType<any> }>,
   fallback: ReactNode = null
 ): ComponentType<any> => {
-  const LazyComponent = lazy(importFunc);
+  const LazyComponent = React.lazy(importFunc);
 
   return (props) => (
-    <Suspense fallback={fallback || <div>Loading...</div>}>
-      <LazyComponent {...props} />
-    </Suspense>
+    <LazyComponent {...props} />
   );
 };
 
@@ -154,34 +152,7 @@ export const useProgressiveImageLoad = (ref: React.RefObject<HTMLImageElement>) 
   return { lowQualityLoaded, highQualityLoaded };
 };
 
-/**
- * Component lazy loading with preload
- */
-export const preloadComponent = (importFunc: () => Promise<any>) => {
-  importFunc();
-};
 
-/**
- * Route-based code splitting
- */
-export const createDynamicRoutes = () => {
-  return {
-    // Admin routes
-    AdminDashboard: dynamicImport(() => import('@/components/admin/dashboard')),
-    AdminProducts: dynamicImport(() => import('@/components/admin/products')),
-    AdminOrders: dynamicImport(() => import('@/components/admin/orders')),
-
-    // User routes
-    UserProfile: dynamicImport(() => import('@/components/user/profile')),
-    UserOrders: dynamicImport(() => import('@/components/user/orders')),
-    UserWishlist: dynamicImport(() => import('@/components/user/wishlist')),
-
-    // Checkout routes
-    CheckoutCart: dynamicImport(() => import('@/components/checkout/cart')),
-    CheckoutForm: dynamicImport(() => import('@/components/checkout/form')),
-    CheckoutPayment: dynamicImport(() => import('@/components/checkout/payment')),
-  };
-};
 
 /**
  * Chunk prefetching

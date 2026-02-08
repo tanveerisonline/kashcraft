@@ -3,7 +3,7 @@
  * Manages out-of-stock notifications and waitlist functionality
  */
 
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 import { EventEmitter } from "events";
 
 export interface WaitlistEntry {
@@ -168,13 +168,7 @@ export class ProductWaitlistService extends EventEmitter {
         }
       }
 
-      // Increment notification count for analytics
-      await prisma.product.update({
-        where: { id: productId },
-        data: {
-          waitlistNotifications: { increment: notifiedCount },
-        },
-      });
+
 
       return notifiedCount;
     } catch (error) {
